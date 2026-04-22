@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>비즈니스 메인 페이지</title>
+    <link rel="stylesheet" href="scc/BizStyle.css">
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1 class="logo">ESS-M.S</h1><!-- ESS Monitoring system -->
+            <nav>
+                <ul>
+                    <li><a href="#">홈</a></li>
+                    <li><a href="#">서비스 소개</a></li>
+                    <li><a href="#">문의게시판</a></li>
+                    <!-- <li><a href="#">문의하기</a></li> -->
+                    <li><a href="#" class="login-btn">로그인</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h2>환경과 사회를 위한 최상의 선택</h2>
+            <p>우리 아이와 함께할 미래를 위해 고민합니다.</p>
+            <!-- <button class="btn">자세히 보기</button> -->
+        </div>
+    </section>
+
+<!-- 날씨 섹션 -->
+<section class="weather-section container">
+    <div class="weather-title">
+        <h3>☀️ 전국 주요 지역 날씨</h3>
+        <p>실시간 기상 상황을 확인하세요.</p>
+    </div>
+    <div class="weather-grid">
+        <div class="weather-item">
+            <span class="city">서울</span>
+            <span class="icon">☀️</span>
+            <span class="temp">12°C</span>
+        </div>
+        <div class="weather-item">
+            <span class="city">부산</span>
+            <span class="icon">☁️</span>
+            <span class="temp">15°C</span>
+        </div>
+        <div class="weather-item">
+            <span class="city">대구</span>
+            <span class="icon">☀️</span>
+            <span class="temp">14°C</span>
+        </div>
+        <div class="weather-item">
+            <span class="city">광주</span>
+            <span class="icon">⛅</span>
+            <span class="temp">13°C</span>
+        </div>
+    </div>
+    <div class="weather-item">
+        <span class="city">제주</span>
+        <span class="icon">🌧️</span>
+        <span class="temp">18°C</span>
+    </div>
+</section>
+
+    <section class="services container">
+        <div class="service-card">
+            <h3>문의 게시판</h3>
+            <p>여러가지 문의 사항을 접수 합니다.
+            </p>
+        </div>
+        <div class="service-card">
+            <h3>ESS 최신 정보</h3>
+            <p>ESS 관련 정보를 제공합니다.</p>
+        </div>
+        <div class="service-card">
+            <h3>발전량 확인</h3>
+            <p>로그인 후 확인 가능합니다.</p>
+        </div>
+    </section>
+
+    <section class="board container">
+        <h3>ESS 최신 정보</h3>
+        <table class="board-table">
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>날짜</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>2024년 신규 서비스 런칭 안내</td>
+                <td>2024.01.20</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>서비스 이용 약관 변경 공지</td>
+                <td>2024.01.15</td>
+            </tr>
+        </table>
+    </section>
+
+</body>
+</html>
