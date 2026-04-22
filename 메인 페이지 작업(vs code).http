@@ -31,7 +31,7 @@
         </div>
     </section>
 
-<!-- 날씨 섹션 -->
+<!-- 날씨 섹션, 이렇게 할 것이다 라는 예시용 실시간 x -->
 <section class="weather-section container">
     <div class="weather-title">
         <h3>☀️ 전국 주요 지역 날씨</h3>
