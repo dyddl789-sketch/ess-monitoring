@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>비즈니스 메인 페이지</title>
-    <link rel="stylesheet" href="scc/BizStyle.css">
+    <link rel="stylesheet" href="scc/1.main.css">
 </head>
 <body>
 
@@ -13,25 +13,25 @@
             <h1 class="logo">ESS-M.S</h1><!-- ESS Monitoring system -->
             <nav>
                 <ul>
-                    <li><a href="#">홈</a></li>
-                    <li><a href="#">서비스 소개</a></li>
-                    <li><a href="#">문의게시판</a></li>
-                    <!-- <li><a href="#">문의하기</a></li> -->
-                    <li><a href="#" class="login-btn">로그인</a></li>
+                <li><a href="1.main.html">홈</a></li>
+                <li><a href="3.serviceInfo.html">서비스 소개</a></li>
+                <li><a href="2.contact.html">문의게시판</a></li>
+                <li id="auth-menu">
+                    <a href="javascript:void(0)" class="login-btn" onclick="openLoginWindow()">로그인</a>
+                </li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <section class="hero">
+    <section class="hero" onclick="location.href='3.serviceInfo.html';" style="cursor:pointer;">
         <div class="hero-content">
             <h2>환경과 사회를 위한 최상의 선택</h2>
             <p>우리 아이와 함께할 미래를 위해 고민합니다.</p>
-            <!-- <button class="btn">자세히 보기</button> -->
         </div>
     </section>
 
-<!-- 날씨 섹션, 이렇게 할 것이다 라는 예시용 실시간 x -->
+<!-- 날씨 섹션, 예시용 실시간 X -->
 <section class="weather-section container">
     <div class="weather-title">
         <h3>☀️ 전국 주요 지역 날씨</h3>
@@ -58,26 +58,28 @@
             <span class="icon">⛅</span>
             <span class="temp">13°C</span>
         </div>
-    </div>
-    <div class="weather-item">
-        <span class="city">제주</span>
-        <span class="icon">🌧️</span>
-        <span class="temp">18°C</span>
-    </div>
+        <div class="weather-item">
+            <span class="city">제주</span>
+            <span class="icon">🌧️</span>
+            <span class="temp">18°C</span>
+        </div>
 </section>
 
     <section class="services container">
-        <div class="service-card">
+        <div class="service-card" onclick="location.href='2.contact.html'" style="cursor:pointer;">
             <h3>문의 게시판</h3>
-            <p>여러가지 문의 사항을 접수 합니다.
-            </p>
+            <p>여러가지 문의 사항을 접수 합니다.</p>
         </div>
-        <div class="service-card">
+        <div class="service-card bg-info" onclick="location.href='6.newsupdate.html'" style="cursor:pointer;">
             <h3>ESS 최신 정보</h3>
             <p>ESS 관련 정보를 제공합니다.</p>
         </div>
         <div class="service-card">
-            <h3>발전량 확인</h3>
+            <h3>발전량 확인(개인용)</h3>
+            <p>로그인 후 확인 가능합니다.</p>
+        </div>
+        <div class="service-card">
+            <h3>발전량 확인(사업자용)</h3>
             <p>로그인 후 확인 가능합니다.</p>
         </div>
     </section>
@@ -103,5 +105,51 @@
         </table>
     </section>
 
+    <!-- 로그인 창 열기 스크립트 -->
+    <script>
+        function openLoginWindow() {
+            window.open('4.login copy.html', 'login', 'width=500,height=600,top=100,left=100');
+        }
+    </script>
+
+    <!-- 로그인 체크기능 -->
+    <script>
+    // 페이지 로드 시 실행
+    window.onload = function() {
+        checkLoginStatus();
+    };
+
+    function checkLoginStatus() {
+        const isLoggedIn = localStorage.getItem('isLoggedIn'); // 로그인 상태 확인
+        const authMenu = document.getElementById('auth-menu');
+
+        if (isLoggedIn === 'true') {
+            const userName = localStorage.getItem('userName') || '사용자';
+            // 로그인 상태일 때: '님' 표기 및 로그아웃 버튼 표시
+            authMenu.innerHTML = `
+                <span style="margin-right:15px; color:#333; font-weight:bold;">${userName}님</span>
+                <a href="javascript:void(0)" class="login-btn" style="background:#6c757d;" onclick="handleLogout()">로그아웃</a>
+            `;
+        }
+    }
+
+    function handleLogout() {
+        if(confirm("로그아웃 하시겠습니까?")) {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userName');
+            alert("로그아웃 되었습니다.");
+            location.reload(); // 페이지 새로고침하여 메뉴 갱신
+        }
+    }
+
+    // 기존에 만든 로그인 창 열기 함수
+    function openLoginWindow() {
+        const width = 450; const height = 620;
+        const left = (window.screen.width / 2) - (width / 2);
+        const top = (window.screen.height / 2) - (height / 2);
+        window.open('4.login.html', 'ESS_Login', `width=${width}, height=${height}, left=${left}, top=${top}, resizable=no, scrollbars=no`);
+    }
+
+    </script>
 </body>
 </html>
