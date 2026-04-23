@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상세보기 - ESS-M.S</title>
+    <link rel="stylesheet" href="scc/1.main.css">
+    <style>
+        /* 상세 페이지 전용 추가 스타일 */
+        .view-container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 40px;
+            border-top: 2px solid #007bff;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        .view-header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .view-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        .view-info {
+            display: flex;
+            gap: 20px;
+            color: #888;
+            font-size: 0.9rem;
+        }
+        .view-content {
+            line-height: 1.8;
+            color: #444;
+            min-height: 300px;
+            font-size: 1.05rem;
+        }
+        .view-content img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .view-footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1 class="logo" onclick="location.href='1.main.html'" style="cursor:pointer;">ESS-M.S</h1>
+            <nav>
+                <ul>
+                    <li><a href="1.main.html">홈</a></li>
+                    <li><a href="3.serviceInfo.html">서비스 소개</a></li>
+                    <li><a href="2.contact.html">문의게시판</a></li>
+                    <li id="auth-menu">
+                        <a href="javascript:void(0)" class="login-btn" onclick="openLoginWindow()">로그인</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <article class="view-container">
+            <div class="view-header">
+                <h2>[기술] 차세대 배터리 매니지먼트 시스템(BMS) 효율 측정 결과</h2>
+                <div class="view-info">
+                    <span><strong>작성일:</strong> 2024-03-20</span>
+                    <span><strong>작성자:</strong> 관리자</span>
+                    <span><strong>조회수:</strong> 125</span>
+                </div>
+            </div>
+
+            <div class="view-content">
+                <p>안녕하세요. ESS-M.S 기술팀입니다.</p>
+                <p>이번에 새롭게 도입된 차세대 BMS(Battery Management System)의 효율 측정 결과를 공유드립니다. 
+                   이번 테스트는 실제 도시 환경의 전력 부하 데이터를 기반으로 진행되었으며, 기존 시스템 대비 약 15% 이상의 에너지 효율 향상을 확인하였습니다.</p>
+                
+                <p>특히 저온 환경에서의 방전 제어 기술이 향상되어 겨울철 에너지 손실을 최소화할 수 있게 되었습니다. 
+                   자세한 기술 리포트는 아래 첨부파일(준비중)을 확인해 주시기 바랍니다.</p>
+                
+                <p>항상 최고의 모니터링 시스템을 제공하기 위해 노력하겠습니다. 감사합니다.</p>
+            </div>
+
+            <div class="view-footer">
+                <button class="btn" onclick="location.href='6.newsupdate.html'" style="background: #6c757d;">목록으로 돌아가기</button>
+            </div>
+        </article>
+    </main>
+
+    <script>
+        function openLoginWindow() {
+            const width = 450; const height = 620;
+            const left = (window.screen.width / 2) - (width / 2);
+            const top = (window.screen.height / 2) - (height / 2);
+            window.open('4.login.html', 'ESS_Login', `width=${width}, height=${height}, left=${left}, top=${top}, resizable=no, scrollbars=no`);
+        }
+    </script>
+
+<!-- 로그인 체크기능 -->
+    <script>
+// 페이지 로드 시 실행
+window.onload = function() {
+    checkLoginStatus();
+};
+
+function checkLoginStatus() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn'); // 로그인 상태 확인
+    const authMenu = document.getElementById('auth-menu');
+
+    if (isLoggedIn === 'true') {
+        const userName = localStorage.getItem('userName') || '사용자';
+        // 로그인 상태일 때: '님' 표기 및 로그아웃 버튼 표시
+        authMenu.innerHTML = `
+            <span style="margin-right:15px; color:#333; font-weight:bold;">${userName}님</span>
+            <a href="javascript:void(0)" class="login-btn" style="background:#6c757d;" onclick="handleLogout()">로그아웃</a>
+        `;
+    }
+}
+
+function handleLogout() {
+    if(confirm("로그아웃 하시겠습니까?")) {
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('userName');
+        alert("로그아웃 되었습니다.");
+        location.reload(); // 페이지 새로고침하여 메뉴 갱신
+    }
+}
+
+// 기존에 만든 로그인 창 열기 함수
+function openLoginWindow() {
+    const width = 450; const height = 620;
+    const left = (window.screen.width / 2) - (width / 2);
+    const top = (window.screen.height / 2) - (height / 2);
+    window.open('4.login.html', 'ESS_Login', `width=${width}, height=${height}, left=${left}, top=${top}, resizable=no, scrollbars=no`);
+}
+</script>
+
+</body>
+</html>
