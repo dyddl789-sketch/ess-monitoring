@@ -6,7 +6,7 @@
 }
 
 body {
-    font-family: 'Pretendard', sans-serif; /* 깔끔한 폰트 권장 */
+    font-family: 'Pretendard', sans-serif; 
     line-height: 1.6;
     color: #333;
 }
@@ -16,6 +16,7 @@ body {
     margin: 0 auto;
     padding: 0 20px;
 }
+
 
 /* 상단 메뉴바 */
 header {
@@ -48,6 +49,8 @@ header nav ul li a {
     font-weight: bold;
 }
 
+
+
 /* 히어로 섹션 */
 .hero {
     background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../photo/자연 풍경(도시포함).jpg');
@@ -72,6 +75,8 @@ header nav ul li a {
     border-radius: 5px;
 }
 
+
+
 /* 서비스 소개 */
 .services {
     display: flex;
@@ -88,6 +93,8 @@ header nav ul li a {
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
+
+
 /* 게시판 */
 .board { padding: 40px 0; }
 .board-table {
@@ -102,8 +109,18 @@ header nav ul li a {
     text-align: left;
 }
 
+
+
+.contact-form .btn:hover {
+    background-color: #0056b3;
+}
+
+
 .board-table th { background: #f4f4f4; }
 
+
+
+/* --------로그인 버튼 -----------*/
 /* 기존 네비게이션 스타일 유지 및 로그인 버튼 강조 */
 header nav ul {
     display: flex;
@@ -140,7 +157,10 @@ header nav ul li a:hover {
     color: #fff !important;    /* 글자색은 흰색으로 */
 }
 
-/* 날씨 섹션 스타일 */
+
+
+
+/* --------날씨 섹션 스타일 -----------*/
 .weather-section {
     padding: 10px 10px;
     background: #ffffff;
@@ -191,4 +211,210 @@ header nav ul li a:hover {
     color: #007bff;
     font-weight: bold;
     font-size: 1.0rem;
+}
+
+
+
+/* --------문의 게시판 폼 스타일 -----------*/
+.contact-form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fdfdfd;
+    padding: 40px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input, 
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    resize: none; /* 크기 조절 방지 */
+}
+
+
+
+/* -------- 서비스 소개 페이지 스타일 ----------- */
+
+.sub-hero {
+    background: #2c3e50; /* 비즈니스 블루 그레이 */
+    color: #fff;
+    padding: 40px 0;
+    text-align: center;
+}
+
+.sub-hero h2 { font-size: 2.5rem; margin-bottom: 10px; }
+
+.about-section {
+    padding: 60px 0;
+    text-align: center;
+}
+
+.about-text h3 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #007bff;
+}
+
+.about-text p {
+    max-width: 1000px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    color: #666;
+}
+
+.features-bg {
+    background: #f4f7f9;
+    padding: 80px 0;
+}
+
+.features-grid {
+    display: flex;
+    gap: 30px;
+    justify-content: space-between;
+}
+
+.feature-item {
+    flex: 1;
+    background: #fff;
+    padding: 40px 20px;
+    border-radius: 15px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateY(-10px); /* 살짝 올라가는 효과 */
+}
+
+.f-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.feature-item h4 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+
+
+/* -------- 주요 기능 섹션 스타일 ----------- */
+.key-features-section {
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.key-features-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+    color: #2c3e50;
+}
+
+.key-features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.key-feature-item {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    background: #f9f9f9;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.key-feature-item:hover {
+    transform: translateX(10px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.feature-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: #007bff;
+    color: #fff;
+    font-size: 1.8rem;
+    font-weight: bold;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.key-feature-item h4 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.key-feature-item p {
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+
+
+/* -------- 로그인 탭 스타일 ----------- */
+
+/* 로그인 페이지 전체를 감싸는 영역 (헤더 제외 높이 조절) */
+.login-page-wrapper {
+    background-color: #f4f7f9;
+    min-height: calc(100vh - 70px); /* 헤더 높이를 뺀 나머지 전체 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 0;
+}
+
+.login-type-tabs {
+    display: flex;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #eee;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    background: none;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #999;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.tab-btn.active {
+    color: #007bff;
+    border-bottom: 2px solid #007bff; /* 선택된 탭 강조 */
+}
+
+.tab-btn:hover {
+    color: #007bff;
 }
