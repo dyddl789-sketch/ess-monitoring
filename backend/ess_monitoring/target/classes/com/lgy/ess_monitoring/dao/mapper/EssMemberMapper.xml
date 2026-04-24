@@ -1,0 +1,54 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lgy.ess_monitoring.dao.EssMemberDAO">
+
+	<insert id="join">
+		insert into ess_member
+		(member_id, member_name, member_userid, member_pw, phone, email, join_date)
+        values
+        (ess_member_seq.nextval, #{member_name}, #{member_userid}, #{member_pw}, #{phone}, #{email}, sysdate)
+	</insert>
+	
+	<select id="login" resultType="com.lgy.ess_monitoring.dto.EssMemberDTO">
+		select member_id, member_name, member_userid, member_pw
+		from ess_member
+		where member_userid = #{member_userid}
+	</select>
+
+	
+	
+	
+	
+    
+    
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
