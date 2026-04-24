@@ -85,7 +85,7 @@
 
     <main class="main-content">
         <nav class="top-nav">
-            <span class="active">메인</span><span>단선도</span><span>현황</span><span>조회</span><span>분석</span><span>설정</span>
+            <span class="active">메인</span><span>분석</span><span>설정</span>
         </nav>
 
         <div class="gauge-board">
