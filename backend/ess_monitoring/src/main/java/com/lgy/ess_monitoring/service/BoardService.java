@@ -19,5 +19,6 @@ public interface BoardService {
 	public void delete(HashMap<String, String> param);// 삭제
 	public int getTotalCount(Criteria cri);// 전체 게시글 수
 	public void increaseHit(int board_no);// 조회수 증가
+	public int getWriterMemberId(int boardNo);
 
 }

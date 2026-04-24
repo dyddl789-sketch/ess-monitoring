@@ -17,6 +17,7 @@ public interface BoardDAO {
 		public void delete(HashMap<String, String> param);// 삭제
 		public int getTotalCount(Criteria cri);// 전체 게시글 수
 		public void increaseHit(int board_no);// 조회수 증가
+		public int getWriterMemberId(int boardNo); // 게시글 작성자 회원번호 조회
 	
 }
 

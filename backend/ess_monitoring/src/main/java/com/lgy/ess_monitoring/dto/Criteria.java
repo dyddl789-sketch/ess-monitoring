@@ -7,19 +7,17 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @ToString
 public class Criteria {
 	private int pageNum; //페이지 번호
 	private int amount; //페이지당 글 개수
 	
-	private String type;
-	private String keyword;
+	private String type; //검색 종류
+	private String keyword; // 검색어
 	
 	public Criteria() {
-//		초키페이지는 1이고, 10개씩 출력
-//		@AllArgsConstructor 에서 생성자 매개변수가 4개라서 오류 -> 2개의 매개변수를 갖는 생성자 추가 필요
-		this(1, 10);
+		this.pageNum = 1; //기본 1페이지
+		this.amount = 10; //기본 10개씩 출력
 	}
 	
 	public Criteria(int pageNum, int amount) {
@@ -35,7 +33,7 @@ public class Criteria {
 	
 	//페이징 시작 위치
 	public int getPageStart() {
-		return (this.pageNum - 1) * this.amount;
+		return (pageNum - 1) * amount;
 	}
 
 

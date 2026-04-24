@@ -64,7 +64,6 @@ public class BoardServiceImpl implements BoardService{
 	}
 
 	@Override
-//	public int getTotalCount() {
 	public int getTotalCount(Criteria cri) {
 		log.info("@# getTotalCount()");
 		BoardDAO dao = sqlSession.getMapper(BoardDAO.class);
@@ -76,6 +75,14 @@ public class BoardServiceImpl implements BoardService{
 	public void increaseHit(int board_no) {
 		BoardDAO dao = sqlSession.getMapper(BoardDAO.class);
 		dao.increaseHit(board_no);
+	}
+
+	@Override
+	public int getWriterMemberId(int boardNo) {
+		log.info("@# BoardServiceImpl getWriterMemberId()");		
+		
+		BoardDAO dao = sqlSession.getMapper(BoardDAO.class);
+		return dao.getWriterMemberId(boardNo);
 	}
 
 	
