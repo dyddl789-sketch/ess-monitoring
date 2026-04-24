@@ -22,11 +22,9 @@ public class EssMemberServiceImpl implements EssMemberService{
 	}
 
 	@Override
-	public EssMemberDTO login(String member_userid) {
-		
-		EssMemberDAO dao = sqlSession.getMapper(EssMemberDAO.class);
-
-		return dao.login(member_userid);
+	public EssMemberDTO login(HashMap<String, String> param) {
+	    EssMemberDAO dao = sqlSession.getMapper(EssMemberDAO.class);
+	    return dao.login(param);
 	}
 	
 }

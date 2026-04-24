@@ -9,10 +9,10 @@
 <body>
 	<script>
 	    if (window.opener) {
-	        window.opener.location.href = '/ess_monitoring/list';
+	        window.opener.location.href = '/ess_monitoring/main';
 	        window.close();
 	    } else {
-	        location.href = '/ess_monitoring/list';
+	        location.href = '/ess_monitoring/main';
 	    }
 	</script>
 </body>

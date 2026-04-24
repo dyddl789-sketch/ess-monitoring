@@ -11,23 +11,32 @@
 <!-- 	</select> -->
 	
 	<select id="getData" resultType="com.lgy.ess_monitoring.dto.EssMonitoringDTO">
-    select ess_id, member_id, device_name, voltage, current_val, soc, status, measured_at
-    from ess_monitoring
-    where member_id = #{param1}
-    order by measured_at desc
+	    select 
+	        monitor_id,
+	        device_id,
+	        voltage,
+	        current_a,
+	        soc,
+	        power_output,
+	        record_time
+	    from monitoring
+	    where member_id = #{memberId}
+	    order by record_time desc
 	</select>
 	
 	<select id="getDbUser" resultType="string">
-    select user from dual
+  	 select 'test' as user
 	</select>
 
 	<select id="getTotalCount" resultType="int">
-	    select count(*) from ess_monitoring
+	    select count(*) from monitoring
 	</select>
 	
-	<select id="getMemberCount" resultType="int">
-	    select count(*) from ess_monitoring where member_id = 1
-	</select>
+		<select id="getMemberCount" parameterType="int" resultType="int">
+		    select count(*) 
+		    from monitoring 
+		    where member_id = #{memberId}
+		</select>
 
 </mapper>
 
