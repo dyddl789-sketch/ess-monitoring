@@ -26,7 +26,7 @@
 <!-- ================= HERO ================= -->
 <section class="hero">
     <div class="hero-content">
-        <h2>환경과 사회를 위한 ESS 시스템입니다</h2>
+        <h2>환경과 사회를 위한 ESS 시스템</h2>
         <p>실시간 에너지 관리 플랫폼</p>
     </div>
 </section>
