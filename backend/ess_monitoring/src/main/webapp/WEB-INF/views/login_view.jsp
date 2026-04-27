@@ -54,7 +54,7 @@
             </form>
 
             <div class="login-footer">
-                <p>아직 계정이 없으신가요? <a href="${pageContext.request.contextPath}/signup">회원가입</a></p>
+                <p>아직 계정이 없으신가요? <a href="${pageContext.request.contextPath}/join_view">회원가입</a></p>
             </div>
         </div>
     </div>
