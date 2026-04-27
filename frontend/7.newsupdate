@@ -4,7 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ESS 최신 정보 - ESS-M.S</title>
-    <link rel="stylesheet" href="scc/1.main.css">
+    <link rel="stylesheet" href="css/1.main.css">
+    <style>
+        /* 페이지 전용 추가 스타일 */
+        .sub-hero {
+            background-color: #2c3e50;
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+        .board { padding: 50px 0; min-height: 500px; }
+        .board-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .board-table th { border-top: 2px solid #333; border-bottom: 1px solid #ddd; padding: 15px; background: #f9f9f9; }
+        .board-table td { border-bottom: 1px solid #ddd; padding: 15px; }
+        .pagination a { display: inline-block; padding: 8px 16px; border: 1px solid #ddd; color: #333; text-decoration: none; border-radius: 4px; }
+        .pagination a.active { background-color: #007bff; color: white; border-color: #007bff; }
+    </style>
 </head>
 <body>
 
@@ -12,7 +27,7 @@
         <div class="container">
             <h1 class="logo" onclick="location.href='1.main.html'" style="cursor:pointer;">ESS-M.S</h1>
             <nav>
-                <ul>
+                <ul id="nav-list">
                     <li><a href="1.main.html">홈</a></li>
                     <li><a href="3.serviceInfo.html">서비스 소개</a></li>
                     <li><a href="2.contact.html">문의게시판</a></li>
@@ -35,8 +50,8 @@
         <div class="board-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <p>총 <strong>4</strong>개의 소식이 있습니다.</p>
             <div class="search-box">
-                <input type="text" placeholder="검색어 입력" style="padding: 5px; border: 1px solid #ddd; border-radius: 4px;">
-                <button class="btn" style="padding: 5px 15px; margin: 0;">검색</button>
+                <input type="text" placeholder="검색어 입력" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                <button class="btn" style="padding: 8px 15px; margin-left: 5px; background:#007bff; color:white; border:none; border-radius:4px; cursor:pointer;">검색</button>
             </div>
         </div>
 
@@ -53,7 +68,7 @@
                 <tr>
                     <td style="text-align: center;">4</td>
                     <td>
-                <a href="7.news_view.html" style="text-decoration: none; color: #333; font-weight: bold;"> [기술] 차세대 배터리 매니지먼트 시스템(BMS) 효율 측정 결과</a>
+                        <a href="8.news_view.html?id=4" style="text-decoration: none; color: #333; font-weight: bold;">[기술] 차세대 배터리 매니지먼트 시스템(BMS) 효율 측정 결과</a>
                     </td>
                     <td>2024-03-20</td>
                     <td style="text-align: center;">125</td>
@@ -61,22 +76,24 @@
                 <tr>
                     <td style="text-align: center;">3</td>
                     <td>
-                        <a href="7.news_view.html" style="text-decoration: none; color: #333; font-weight: bold;">
-                            [공지] ESS-M.S 모니터링 시스템 정기 점검 안내 (3/25)
-                        </a>
+                        <a href="8.news_view.html?id=3" style="text-decoration: none; color: #333; font-weight: bold;">[공지] ESS-M.S 모니터링 시스템 정기 점검 안내 (3/25)</a>
                     </td>
                     <td>2024-03-18</td>
                     <td style="text-align: center;">48</td>
                 </tr>
                 <tr>
                     <td style="text-align: center;">2</td>
-                    <td><a href="7.news_view.html" style="text-decoration: none; color: #333; font-weight: bold;">[업계] 2024년 상반기 에너지 정책 변화와 ESS 시장 전망</a></td>
+                    <td>
+                        <a href="8.news_view.html?id=2" style="text-decoration: none; color: #333; font-weight: bold;">[업계] 2024년 상반기 에너지 정책 변화와 ESS 시장 전망</a>
+                    </td>
                     <td>2024-03-15</td>
                     <td style="text-align: center;">210</td>
                 </tr>
                 <tr>
                     <td style="text-align: center;">1</td>
-                    <td><a href="7.news_view.html" style="text-decoration: none; color: #333; font-weight: bold;">[보도] 당사 모니터링 시스템, 에너지 효율 대상 수상</a></td>
+                    <td>
+                        <a href="8.news_view.html?id=1" style="text-decoration: none; color: #333; font-weight: bold;">[보도] 당사 모니터링 시스템, 에너지 효율 대상 수상</a>
+                    </td>
                     <td>2024-03-10</td>
                     <td style="text-align: center;">89</td>
                 </tr>
@@ -84,11 +101,71 @@
         </table>
 
         <div class="pagination" style="text-align: center; margin-top: 30px;">
-            <a href="#" style="margin: 0 5px; text-decoration: none; color: #007bff; font-weight: bold;">1</a>
+            <a href="#" class="active">1</a>
         </div>
     </main>
 
+    <footer style="background-color: #2c3e50; color: white; padding: 40px 0;">
+        <div class="container footer-content" style="display: flex; justify-content: space-between; flex-wrap: wrap;">
+            <div class="footer-info">
+                <h2 class="footer-logo" style="margin-bottom:10px;">ESS-M.S</h2>
+                <p style="color: #bdc3c7; margin-bottom:15px;">스마트 에너지 모니터링 시스템 전문 기업</p>
+                <address style="font-style: normal; line-height: 1.6;">
+                    부산광역시 범내골 kh 학원 <br>
+                    대표전화: 051-123-4567 | 이메일: info@ess-ms.com
+                </address>
+                <p class="copyright" style="margin-top:15px; font-size:0.85rem; color:#95a5a6;">&copy; 2026 ESS-Monitoring System. All Rights Reserved.</p>
+            </div>
+            
+            <div class="footer-links">
+                <h4 style="margin-bottom:15px;">Quick Links</h4>
+                <ul style="list-style:none; padding:0; line-height:2;">
+                    <li><a href="1.main.html" style="color:#bdc3c7; text-decoration:none;">홈</a></li>
+                    <li><a href="3.serviceInfo.html" style="color:#bdc3c7; text-decoration:none;">서비스 소개</a></li>
+                    <li><a href="2.contact.html" style="color:#bdc3c7; text-decoration:none;">문의게시판</a></li>
+                    <li><a href="7.newsupdate.html" style="color:#bdc3c7; text-decoration:none;">최신 정보</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-sns">
+                <h4 style="margin-bottom:15px;">Follow Us</h4>
+                <div class="sns-icons" style="display:flex; gap:15px; color:#bdc3c7;">
+                    <span>Blog</span>
+                    <span>LinkedIn</span>
+                    <span>Youtube</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <script>
+        // 페이지 로드 시 로그인 상태 체크
+        window.onload = function() {
+            checkLoginStatus();
+        };
+
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const authMenu = document.getElementById('auth-menu');
+
+            if (isLoggedIn === 'true' && authMenu) {
+                const userName = localStorage.getItem('userName') || '사용자';
+                authMenu.innerHTML = `
+                    <span style="margin-right:15px; color:#333; font-weight:bold;">${userName}님</span>
+                    <a href="javascript:void(0)" class="login-btn" style="background:#6c757d;" onclick="handleLogout()">로그아웃</a>
+                `;
+            }
+        }
+
+        function handleLogout() {
+            if(confirm("로그아웃 하시겠습니까?")) {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userName');
+                alert("로그아웃 되었습니다.");
+                location.reload();
+            }
+        }
+
         function openLoginWindow() {
             const width = 450; const height = 620;
             const left = (window.screen.width / 2) - (width / 2);
@@ -96,45 +173,5 @@
             window.open('4.login.html', 'ESS_Login', `width=${width}, height=${height}, left=${left}, top=${top}, resizable=no, scrollbars=no`);
         }
     </script>
-
-    <!-- 로그인 체크기능 -->
-    <script>
-// 페이지 로드 시 실행
-window.onload = function() {
-    checkLoginStatus();
-};
-
-function checkLoginStatus() {
-    const isLoggedIn = localStorage.getItem('isLoggedIn'); // 로그인 상태 확인
-    const authMenu = document.getElementById('auth-menu');
-
-    if (isLoggedIn === 'true') {
-        const userName = localStorage.getItem('userName') || '사용자';
-        // 로그인 상태일 때: '님' 표기 및 로그아웃 버튼 표시
-        authMenu.innerHTML = `
-            <span style="margin-right:15px; color:#333; font-weight:bold;">${userName}님</span>
-            <a href="javascript:void(0)" class="login-btn" style="background:#6c757d;" onclick="handleLogout()">로그아웃</a>
-        `;
-    }
-}
-
-function handleLogout() {
-    if(confirm("로그아웃 하시겠습니까?")) {
-        localStorage.removeItem('isLoggedIn');
-        localStorage.removeItem('userName');
-        alert("로그아웃 되었습니다.");
-        location.reload(); // 페이지 새로고침하여 메뉴 갱신
-    }
-}
-
-// 기존에 만든 로그인 창 열기 함수
-function openLoginWindow() {
-    const width = 450; const height = 620;
-    const left = (window.screen.width / 2) - (width / 2);
-    const top = (window.screen.height / 2) - (height / 2);
-    window.open('4.login.html', 'ESS_Login', `width=${width}, height=${height}, left=${left}, top=${top}, resizable=no, scrollbars=no`);
-}
-</script>
- 
 </body>
 </html>
