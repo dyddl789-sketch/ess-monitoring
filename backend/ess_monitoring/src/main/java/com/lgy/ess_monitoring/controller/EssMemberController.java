@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.lgy.ess_monitoring.dto.EssMemberDTO;
 import com.lgy.ess_monitoring.dto.WeatherDTO;
+import com.lgy.ess_monitoring.service.EssDeviceService;
 import com.lgy.ess_monitoring.service.EssMemberService;
 import com.lgy.ess_monitoring.service.WeatherService;
 
@@ -28,6 +29,9 @@ public class EssMemberController {
     
     @Autowired
     private WeatherService weatherService;
+    
+    @Autowired
+    private EssDeviceService deviceService;
 
     // 랜딩 페이지
     @RequestMapping("/main")
@@ -36,10 +40,21 @@ public class EssMemberController {
     	String address = (String) session.getAttribute("member_address");
         log.info("@# main memberAddress => " + address);
         
+        Integer member_id = (Integer)session.getAttribute("member_id");
+        log.info("@# member_id => " + member_id);
+        
+        if (member_id != null) {
+            int deviceCount = deviceService.getDeviceCount(member_id);
+            log.info("@# deviceCount => " + deviceCount);
+            model.addAttribute("deviceCount", deviceCount);
+        }else {
+            model.addAttribute("deviceCount", 0);
+		}
+        
         //회원 주소 기준 날씨 api 호출
         List<WeatherDTO> weatherList = weatherService.forecastByAddress(address);
 
-     // API 오류 등으로 null이 올 경우를 대비한 방어 코드
+        // API 오류 등으로 null이 올 경우를 대비한 방어 코드
         if (weatherList == null) {
             log.info("@# weatherList is null");
             weatherList = new ArrayList<>();

@@ -231,16 +231,9 @@
             <c:otherwise>
                 <c:forEach var="weather" items="${weatherList}">
                     <span class="weather-item">
-                        <%-- 예보 시간 예: 09:00 --%>
                         ${weather.fcstTime}
-
-                        <%-- 날씨 아이콘 예: ☀️, ⛅, ☁️, 🌧️ --%>
                         ${weather.weatherIcon}
-
-                        <%-- 하늘 상태 예: 맑음, 구름많음, 흐림 --%>
                         ${weather.skyStatus}
-
-                        <%-- 기온 예: 16℃ --%>
                         ${weather.temperature}
                     </span>
                 </c:forEach>
@@ -249,13 +242,21 @@
     </div>
 </section>
 
-
 <section class="container">
     <div class="summary-grid">
         <div class="summary-card">
             <h4>등록 기기</h4>
-            <strong>0대</strong>
-            <p>ESS 장비 등록 후 표시</p>
+			<strong id="deviceCount">
+			    <c:choose>
+			        <c:when test="${empty deviceCount}">
+			            0대
+			        </c:when>
+			        <c:otherwise>
+			            ${deviceCount}대
+			        </c:otherwise>
+			    </c:choose>
+			</strong>            
+			<p>ESS 장비 등록 후 표시</p>
         </div>
         <div class="summary-card">
             <h4>운영상태</h4>
@@ -351,10 +352,6 @@
     </div>
 </div>
 
-
-
-
-
 <script>
 const ctx = "${pageContext.request.contextPath}";
 
@@ -404,28 +401,327 @@ function ajaxLoad(url, fallbackTitle, fallbackHtml) {
 }
 
 function loadRegister() {
-    ajaxLoad(
-        "/device/registerForm",
-        "🔧 기기 등록",
-        "<p>아직 <strong>/device/registerForm</strong> 화면이 없어서 임시 화면을 표시합니다.</p>" +
-        "<table class='fake-table'>" +
-        "<tr><th>입력 항목</th><th>설명</th></tr>" +
-        "<tr><td>기기명</td><td>ESS 장비 이름</td></tr>" +
-        "<tr><td>설치 주소</td><td>회원 주소 또는 실제 설치 위치</td></tr>" +
-        "<tr><td>기기 상태</td><td>정상 / 점검 / 고장</td></tr>" +
-        "</table>"
+	renderTemp(
+    		"🔧 ESS 기기 등록",
+            "<form id='deviceForm'>" +
+
+            "<table class='fake-table'>" +
+
+            "<tr>" +
+            "<th>항목</th>" +
+            "<th>입력</th>" +
+            "</tr>" +
+
+            "<tr>" +
+            "<td>기기 이름</td>" +
+            "<td><input type='text' name='device_name' id='device_name' placeholder='예: SOLAR_BUSAN_ESS_01'></td>" +
+            "</tr>" +
+
+            "<tr>" +
+            "<td>설치 위치</td>" +
+            "<td><input type='text' name='location' id='location' placeholder='예: 부산 사상구'></td>" +
+            "</tr>" +
+
+            "<tr>" +
+            "<td>장비 용량</td>" +
+            "<td><input type='text' name='capacity_kw' id='capacity_kw' placeholder='예: 100'> kW</td>" +
+            "</tr>" +
+
+            "<tr>" +
+            "<td>장비 종류</td>" +
+            "<td>" +
+            "<select name='device_type' id='device_type'>" +
+            "<option value=''>선택</option>" +
+            "<option value='태양광ESS'>태양광ESS</option>" +
+            "<option value='배터리'>배터리</option>" +
+            "<option value='인버터'>인버터</option>" +
+            "<option value='PCS'>PCS</option>" +
+            "<option value='BMS'>BMS</option>" +
+            "</select>" +
+            "</td>" +
+            "</tr>" +
+
+            "<tr>" +
+            "<td>현재 상태</td>" +
+            "<td>" +
+            "<select name='status' id='status'>" +
+            "<option value='정상'>정상</option>" +
+            "<option value='점검'>점검</option>" +
+            "<option value='오류'>오류</option>" +
+            "</select>" +
+            "</td>" +
+            "</tr>" +
+
+            "<tr>" +
+            "<td>설치 날짜</td>" +
+            "<td><input type='date' name='install_date' id='install_date'></td>" +
+            "</tr>" +
+
+            "<tr>" +
+            "<td colspan='2'>" +
+            "<button type='button' onclick='fn_device_register()'>등록</button> " +
+            "<button type='button' onclick='$(\"#deviceForm\")[0].reset()'>초기화</button>" +
+            "</td>" +
+            "</tr>" +
+
+            "</table>" +
+            "</form>"
     );
 }
 
+function fn_device_register() {
+    console.log("@# fn_device_register() 실행");
+
+    var device_name = $("#device_name").val();
+    var location = $("#location").val();
+    var capacity_kw = $("#capacity_kw").val();
+    var device_type = $("#device_type").val();
+    var status = $("#status").val();
+    var install_date = $("#install_date").val();
+
+    console.log("@# device_name =>", device_name);
+    console.log("@# location =>", location);
+    console.log("@# capacity_kw =>", capacity_kw);
+    console.log("@# device_type =>", device_type);
+    console.log("@# status =>", status);
+    console.log("@# install_date =>", install_date);
+
+    if (device_name == "") {
+        alert("기기 이름을 입력하세요.");
+        $("#device_name").focus();
+        return;
+    }
+
+    if (capacity_kw == "") {
+        alert("장비 용량을 입력하세요.");
+        $("#capacity_kw").focus();
+        return;
+    }
+
+    if (device_type == "") {
+        alert("장비 종류를 선택하세요.");
+        $("#device_type").focus();
+        return;
+    }
+
+    var formData = $("#deviceForm").serialize();
+    console.log("@# formData =>", formData);
+
+    $.ajax({
+        type: "post",
+        url: ctx + "/device_register_ajax",
+        data: formData,
+        success: function(result) {
+            console.log("@# result =>", result);
+
+            if (result == "success") {
+                alert("기기 등록이 완료되었습니다.");
+
+                $("#deviceForm")[0].reset();
+
+                var countText = $("#deviceCount").text();
+                var count = parseInt(countText.replace("대", ""));
+
+                if (isNaN(count)) {
+                    count = 0;
+                }
+
+                $("#deviceCount").text((count + 1) + "대");
+                
+                //등록 후 바로 기기 목록으로 이동
+                loadDeviceList();
+
+            } else if (result == "login_required") {
+                alert("로그인이 필요합니다.");
+                location.href = ctx + "/login_view";
+
+            } else {
+                alert("기기 등록에 실패했습니다.");
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log("@# xhr =>", xhr);
+            console.log("@# status =>", status);
+            console.log("@# error =>", error);
+            alert("서버 오류가 발생했습니다.");
+        }
+    });
+    
+    
+}
+
 function loadDeviceList() {
-    renderTemp(
-        "🗂 기기 목록",
-        "<p>등록된 ESS 장비를 확인하는 영역입니다.</p>" +
-        "<table class='fake-table'>" +
-        "<tr><th>기기명</th><th>그룹</th><th>상태</th><th>최근 수신</th></tr>" +
-        "<tr><td>등록된 기기 없음</td><td>-</td><td><span class='badge yellow'>대기</span></td><td>-</td></tr>" +
-        "</table>"
-    );
+    console.log("@# loadDeviceList() 실행");
+
+    $.ajax({
+        url: ctx + "/device_list_ajax",
+        type: "get",
+        dataType : "json",
+        success: function(list) {
+            console.log("@# device list =>", list);
+
+            var html = "";
+
+            html += "<p>등록된 ESS 장비를 확인하는 영역입니다.</p>";
+
+            html += "<table class='fake-table'>";
+            html += "<tr>";
+            html += "<th>번호</th>";
+            html += "<th>기기명</th>";
+            html += "<th>위치</th>";
+            html += "<th>용량</th>";
+            html += "<th>종류</th>";
+            html += "<th>상태</th>";
+            html += "<th>설치일</th>";
+            html += "<th>관리</th>";
+            html += "<td>";
+			
+            
+            
+            if (list == null || list.length == 0) {
+                html += "<tr>";
+                html += "<td colspan='8'>등록된 기기가 없습니다.</td>";
+                html += "</tr>";
+            } else {
+                for (var i = 0; i < list.length; i++) {
+                    var device = list[i];
+
+                    var badgeClass = "green";
+
+                    if (device.status == "점검") {
+                        badgeClass = "yellow";
+                    } else if (device.status == "오류") {
+                        badgeClass = "red";
+                    }
+
+                    html += "<tr>";
+                    html += "<td>" + device.device_id + "</td>";
+                    html += "<td>" + device.device_name + "</td>";
+                    html += "<td>" + device.location + "</td>";
+                    html += "<td>" + device.capacity_kw + " kW</td>";
+                    html += "<td>" + device.device_type + "</td>";
+                    html += "<td><span class='badge " + badgeClass + "'>" + device.status + "</span></td>";
+                    html += "<td>" + device.install_date + "</td>";
+                    html += "<td>";
+                    // 삭제 버튼
+                    // 클릭하면 JavaScript deleteDevice() 함수로 device_id를 넘긴다.
+                    html += "<button type='button' onclick='deleteDevice(" + device.device_id + ")'>삭제</button>";
+                    html += "</td>";
+                    html += "</tr>";
+                }
+            }
+
+            html += "</table>";
+
+            renderTemp("🗂 기기 목록", html);
+        },
+        error: function(xhr, status, error) {
+            console.log("@# xhr =>", xhr);
+            console.log("@# status =>", status);
+            console.log("@# error =>", error);
+
+            renderTemp(
+                "🗂 기기 목록",
+                "<p>기기 목록을 불러오는 중 오류가 발생했습니다.</p>"
+            );
+        }
+    });
+}
+// 기기 삭제
+function deleteDevice(device_id) {
+    console.log("@# deleteDevice() 실행");
+
+    // 삭제 대상 기기 번호 확인
+    console.log("@# device_id =>", device_id);
+
+    /*
+     * 삭제는 되돌리기 어려운 작업이므로 confirm으로 한 번 더 확인한다.
+     * 취소를 누르면 함수 종료
+     */
+    if (!confirm("해당 기기를 삭제하시겠습니까?")) {
+        return;
+    }
+
+    /*
+     * AJAX로 서버에 삭제 요청
+     *
+     * 요청 주소:
+     * POST /device_delete_ajax
+     *
+     * 보내는 데이터:
+     * device_id=삭제할기기번호
+     */
+    $.ajax({
+        url: ctx + "/device_delete_ajax",
+        type: "post",
+        data: {
+            device_id: device_id
+        },
+
+        /*
+         * 서버 응답이 정상적으로 왔을 때 실행
+         *
+         * result 값 예상:
+         * success        = 삭제 성공
+         * login_required = 로그인 필요
+         * fail           = 삭제 실패
+         */
+        success: function(result) {
+            console.log("@# delete result =>", result);
+
+            if (result == "success") {
+                alert("기기가 삭제되었습니다.");
+
+                /*
+                 * 화면 상단의 등록 기기 수를 1 감소시킨다.
+                 * 예: 3대 -> 2대
+                 */
+                var countText = $("#deviceCount").text();
+
+                // "3대"에서 "대"를 제거하고 숫자로 변환
+                var count = parseInt(countText.replace("대", ""));
+
+                // 숫자로 변환 실패 시 0으로 처리
+                if (isNaN(count)) {
+                    count = 0;
+                }
+
+                // 0보다 클 때만 1 감소
+                if (count > 0) {
+                    $("#deviceCount").text((count - 1) + "대");
+                } else {
+                    $("#deviceCount").text("0대");
+                }
+
+                /*
+                 * 삭제 후 목록을 다시 불러온다.
+                 * DB에서 삭제된 최신 목록으로 화면 갱신
+                 */
+                loadDeviceList();
+
+            } else if (result == "login_required") {
+                alert("로그인이 필요합니다.");
+
+                // 로그인 페이지로 이동
+                location.href = ctx + "/login_view";
+
+            } else {
+                alert("삭제에 실패했습니다.");
+            }
+        },
+
+        /*
+         * 서버 오류, 매핑 오류, 500 오류 등이 발생하면 실행
+         */
+        error: function(xhr, status, error) {
+            console.log("@# xhr.status =>", xhr.status);
+            console.log("@# xhr.responseText =>", xhr.responseText);
+            console.log("@# status =>", status);
+            console.log("@# error =>", error);
+
+            alert("삭제 중 서버 오류가 발생했습니다.");
+        }
+    });
 }
 
 function loadMonitor() {
