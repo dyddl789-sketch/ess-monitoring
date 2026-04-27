@@ -1,6 +1,8 @@
 package com.lgy.ess_monitoring.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -11,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.lgy.ess_monitoring.dto.EssMemberDTO;
+import com.lgy.ess_monitoring.dto.WeatherDTO;
 import com.lgy.ess_monitoring.service.EssMemberService;
+import com.lgy.ess_monitoring.service.WeatherService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,10 +25,36 @@ public class EssMemberController {
 
     @Autowired
     private EssMemberService service;
+    
+    @Autowired
+    private WeatherService weatherService;
 
     // 랜딩 페이지
     @RequestMapping("/main")
-    public String main() {
+    public String main(HttpSession session, Model model) {
+    	
+    	String address = (String) session.getAttribute("member_address");
+        log.info("@# main memberAddress => " + address);
+        
+        //회원 주소 기준 날씨 api 호출
+        List<WeatherDTO> weatherList = weatherService.forecastByAddress(address);
+
+     // API 오류 등으로 null이 올 경우를 대비한 방어 코드
+        if (weatherList == null) {
+            log.info("@# weatherList is null");
+            weatherList = new ArrayList<>();
+        }
+
+        // 메인 화면에는 너무 많은 데이터가 필요 없으므로 5개만 표시
+        if (weatherList.size() > 5) {
+            weatherList = weatherList.subList(0, 5);
+        }
+
+        // JSP에서 ${weatherList}로 사용할 수 있게 전달
+        model.addAttribute("weatherList", weatherList);
+
+        // JSP에서 제목 표시 등에 사용할 수 있게 주소도 전달
+        model.addAttribute("address", address);
         return "main";
     }
 
@@ -57,6 +87,7 @@ public class EssMemberController {
         session.setAttribute("member_name", dto.getMember_name());
         session.setAttribute("member_userid", dto.getMember_userid());
         session.setAttribute("user_type", dto.getUser_type());
+        session.setAttribute("member_address", dto.getAddress());
 
         return "redirect:/main";
     }
