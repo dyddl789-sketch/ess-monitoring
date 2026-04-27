@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전문 통합 관제 시스템 - ESS-M.S</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* [1] 테마 변수 */
+        :root {
+            --bg-main: #0b1426; --bg-card: #16213e; --bg-sidebar: #1a2647;
+            --text-main: #ffffff; --text-sub: #a0aec0; --border: #2d3748;
+            --accent: #00d2ff; --table-hover: #1e2d4d; --gray-off: #2d3748;
+        }
+        [data-theme='light'] {
+            --bg-main: #f0f2f5; --bg-card: #ffffff; --bg-sidebar: #ffffff;
+            --text-main: #1a202c; --text-sub: #718096; --border: #e2e8f0;
+            --accent: #3182ce; --table-hover: #edf2f7; --gray-off: #cbd5e0;
+        }
+
+        body { margin: 0; padding: 0; background: var(--bg-main); color: var(--text-main); font-family: 'Pretendard', sans-serif; transition: 0.3s; overflow: hidden; }
+        .dashboard { display: grid; grid-template-columns: 240px 1fr 320px; height: 100vh; }
+
+        /* 사이드바 */
+        .sidebar { background: var(--bg-sidebar); border-right: 1px solid var(--border); padding: 20px; }
+        .logo-box { background: var(--accent); color: white; padding: 15px; border-radius: 10px; font-weight: bold; text-align: center; margin-bottom: 20px; cursor: pointer; }
+        .loc-item { padding: 12px; cursor: pointer; border-bottom: 1px solid var(--border); color: var(--text-sub); }
+        .loc-item.active { color: var(--accent); font-weight: bold; }
+
+        /* 메인 컨텐츠 */
+        .main-content { padding: 20px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; }
+        .top-nav { display: flex; gap: 30px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .top-nav span { cursor: pointer; color: var(--text-sub); font-size: 0.9rem; }
+        .top-nav span.active { color: var(--accent); border-bottom: 2px solid var(--accent); font-weight: bold; }
+
+        /* 게이지 보드 */
+        .gauge-board { display: grid; grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr; gap: 10px; background: var(--bg-card); border-radius: 15px; padding: 20px; border: 1px solid var(--border); align-items: center; }
+        .gauge-item { text-align: center; position: relative; border-right: 1px solid var(--border); height: 200px; display: flex; flex-direction: column; justify-content: center; }
+        .gauge-item:last-child { border-right: none; }
+        .gauge-item h4 { margin: 0; font-size: 0.8rem; color: var(--text-sub); position: absolute; top: 15px; left: 50%; transform: translateX(-50%); }
+
+        /* [수정] 시스템 상태 전용 레이아웃: 세로 배치 */
+        .status-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; margin-top: 25px; }
+        
+        /* [수정] 2x2 그리드 범례 */
+        .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; text-align: left; }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: var(--text-sub); }
+        
+        /* [수정] 컬러 박스 스타일 */
+        .color-box { width: 13px; height: 13px; border-radius: 2px; background: var(--gray-off); transition: 0.3s; }
+        
+        /* 상태 활성화 효과 */
+        .box-normal.active { background: #48bb78; box-shadow: 0 0 8px rgba(72, 187, 120, 0.7); }
+        .box-common.active { background: #3498db; box-shadow: 0 0 8px rgba(52, 152, 219, 0.7); }
+        .box-warn.active   { background: #f6ad55; box-shadow: 0 0 8px rgba(246, 173, 85, 0.7); }
+        .box-fault.active  { background: #f56565; box-shadow: 0 0 8px rgba(245, 101, 101, 0.7); }
+
+        .gauge-val { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.2rem; font-weight: bold; }
+
+        /* 테이블 */
+        .device-table-card { background: var(--bg-card); border-radius: 15px; flex: 1; padding: 20px; border: 1px solid var(--border); }
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        th { text-align: left; color: var(--text-sub); padding: 12px; border-bottom: 1px solid var(--border); }
+        td { padding: 10px; border-bottom: 1px solid var(--border); }
+        .tag { padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; }
+        .tag-run { background: rgba(72, 187, 120, 0.2); color: #48bb78; }
+
+        /* 우측 패널 */
+        .right-panel { background: var(--bg-sidebar); border-left: 1px solid var(--border); padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+        .time-box { background: white; color: black; border-radius: 20px; padding: 8px; text-align: center; font-weight: bold; font-size: 0.9rem; }
+        .theme-btn { position: fixed; bottom: 20px; right: 20px; padding: 10px 20px; border-radius: 30px; border: none; background: var(--accent); color: white; font-weight: bold; cursor: pointer; z-index: 999; }
+    </style>
+</head>
+<body>
+
+<button class="theme-btn" onclick="toggleTheme()">🌓 테마 전환</button>
+
+<div class="dashboard">
+    <aside class="sidebar">
+        <div class="logo-box">ESS-M.S</div>
+        <div class="loc-item active">대전소프트 본사</div>
+        <div class="loc-item">대전 제1 발전소</div>
+        <div class="loc-item">대전 제2 발전소</div>
+    </aside>
+
+    <main class="main-content">
+        <nav class="top-nav">
+            <span class="active">메인</span><span>분석</span><span>설정</span>
+        </nav>
+
+        <div class="gauge-board">
+            <div class="gauge-item">
+                <h4>시스템 상태</h4>
+                <div class="status-wrapper">
+                    <div style="width: 100px; height: 100px; position: relative;">
+                        <canvas id="statusGauge"></canvas>
+                        <div class="gauge-val" id="status-text">정상</div>
+                    </div>
+                    <div class="status-grid">
+                        <div class="legend-item"><div id="box-warn" class="color-box box-warn"></div>위험</div>
+                        <div class="legend-item"><div id="box-normal" class="color-box box-normal"></div>정상</div>
+                        <div class="legend-item"><div id="box-fault" class="color-box box-fault"></div>고장</div>
+                        <div class="legend-item"><div id="box-common" class="color-box box-common"></div>보통</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gauge-item">
+                <h4>발전효율</h4>
+                <canvas id="c2"></canvas>
+                <div class="gauge-val">99%</div>
+            </div>
+            <div class="gauge-item">
+                <h4>운영지수</h4>
+                <canvas id="c3"></canvas>
+                <div class="gauge-val" style="font-size: 1.8rem;">90</div>
+            </div>
+            <div class="gauge-item">
+                <h4>설비효율</h4>
+                <canvas id="c4"></canvas>
+                <div class="gauge-val">80%</div>
+            </div>
+            <div class="gauge-item">
+                <h4>가동률</h4>
+                <canvas id="c5"></canvas>
+                <div class="gauge-val">95%</div>
+            </div>
+        </div>
+
+        <div class="device-table-card">
+            <table>
+                <thead>
+                    <tr><th>DEVICE</th><th>상태</th><th>발전(kW)</th><th>전압(V)</th><th>온도(℃)</th><th>효율</th></tr>
+                </thead>
+                <tbody id="device-list"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <aside class="right-panel">
+        <div class="time-box" id="clock">2026-04-24 17:00:00</div>
+        <div style="background:rgba(0,0,0,0.2); padding:15px; border-radius:10px;">
+            <h5 style="margin:0 0 10px 0; color:var(--accent);">실시간 고장 목록</h5>
+            <p style="font-size:0.75rem; color:var(--text-sub); margin:0;">현재 감지된 고장이 없습니다.</p>
+        </div>
+    </aside>
+</div>
+
+<script>
+    // 1. 테마 제어
+    function toggleTheme() {
+        const body = document.body;
+        body.setAttribute('data-theme', body.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+    }
+
+    // 2. 시계
+    setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleString(); }, 1000);
+
+    // 3. 차트 공통 옵션
+    const baseOpt = { cutout: '80%', plugins: { legend: false, tooltip: false }, maintainAspectRatio: false };
+
+    // 4. 시스템 상태 게이지 (4등분 단계별 점등)
+    const ctxStatus = document.getElementById('statusGauge').getContext('2d');
+    const statusChart = new Chart(ctxStatus, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [25, 25, 25, 25],
+                backgroundColor: ['#2d3748', '#2d3748', '#2d3748', '#2d3748'],
+                borderWidth: 2, borderColor: 'transparent'
+            }]
+        },
+        options: baseOpt
+    });
+
+    function updateStatus(level) {
+        const colors = ['#48bb78', '#3498db', '#f6ad55', '#f56565'];
+        const labels = ['정상', '보통', '위험', '고장'];
+        const ids = ['normal', 'common', 'warn', 'fault'];
+        
+        let newBg = ['#2d3748', '#2d3748', '#2d3748', '#2d3748'];
+        for(let i=0; i<level; i++) newBg[i] = colors[level-1];
+        
+        statusChart.data.datasets[0].backgroundColor = newBg;
+        statusChart.update();
+
+        const textEl = document.getElementById('status-text');
+        textEl.innerText = labels[level-1];
+        textEl.style.color = colors[level-1];
+
+        // 컬러 박스 활성화
+        document.querySelectorAll('.color-box').forEach(b => b.classList.remove('active'));
+        const activeBox = document.getElementById(`box-${ids[level-1]}`);
+        if(activeBox) activeBox.classList.add('active');
+    }
+
+    // 5. 기타 게이지 초기화
+    function makeChart(id, val, color) {
+        new Chart(document.getElementById(id), {
+            type: 'doughnut',
+            data: { datasets: [{ data: [val, 100-val], backgroundColor: [color, '#2d3748'], borderWidth: 0 }] },
+            options: baseOpt
+        });
+    }
+    makeChart('c2', 99, '#00d2ff');
+    makeChart('c3', 90, '#00d2ff');
+    makeChart('c4', 80, '#00d2ff');
+    makeChart('c5', 95, '#00d2ff');
+
+    // 6. 테이블 데이터 생성
+    const list = document.getElementById('device-list');
+    for(let i=1; i<=10; i++) {
+        list.innerHTML += `<tr><td>Inverter ${i}</td><td><span class="tag tag-run">▶ 가동</span></td><td>435.2</td><td>179.5</td><td>28.4</td><td>98.2%</td></tr>`;
+    }
+
+    // 초기 상태 실행 (정상)
+    updateStatus(1);
+
+    // 테스트용: 3초마다 상태 변경 확인하고 싶을 때 아래 주석 해제
+    // let l = 1; setInterval(() => { l = l >= 4 ? 1 : l + 1; updateStatus(l); }, 3000);
+</script>
+</body>
+</html>
