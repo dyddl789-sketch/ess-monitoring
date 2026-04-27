@@ -149,6 +149,31 @@
     color: #0f766e;
     font-weight: bold;
 }
+
+.weather-section {
+    margin-top: 20px;
+    margin-bottom: 25px;
+}
+
+.weather-summary {
+    background: #f0fdfa;
+    border: 1px solid #99f6e4;
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.weather-item {
+    background: white;
+    border: 1px solid #ccfbf1;
+    border-radius: 999px;
+    padding: 8px 12px;
+    font-size: 0.95rem;
+    color: #0f172a;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
 </style>
 </head>
 
@@ -178,6 +203,52 @@
         <p>현재 회원 유형: ${sessionScope.user_type}</p>
     </c:if>
 </section>
+
+<section class="weather-section container">
+    <h3>
+        ☀️
+        <c:choose>
+            <%-- 날씨 데이터가 없으면 기본 제목 표시 --%>
+            <c:when test="${empty weatherList}">
+                내 지역 날씨 예보
+            </c:when>
+
+            <%-- 날씨 데이터가 있으면 첫 번째 데이터의 city 표시 --%>
+            <c:otherwise>
+                ${weatherList[0].city} 날씨 예보
+            </c:otherwise>
+        </c:choose>
+    </h3>
+
+    <div class="weather-summary">
+        <c:choose>
+            <%-- Controller에서 weatherList가 비어 있으면 안내 문구 출력 --%>
+            <c:when test="${empty weatherList}">
+                <span>날씨 데이터가 없습니다.</span>
+            </c:when>
+
+            <%-- 날씨 데이터가 있으면 시간대별 예보 출력 --%>
+            <c:otherwise>
+                <c:forEach var="weather" items="${weatherList}">
+                    <span class="weather-item">
+                        <%-- 예보 시간 예: 09:00 --%>
+                        ${weather.fcstTime}
+
+                        <%-- 날씨 아이콘 예: ☀️, ⛅, ☁️, 🌧️ --%>
+                        ${weather.weatherIcon}
+
+                        <%-- 하늘 상태 예: 맑음, 구름많음, 흐림 --%>
+                        ${weather.skyStatus}
+
+                        <%-- 기온 예: 16℃ --%>
+                        ${weather.temperature}
+                    </span>
+                </c:forEach>
+            </c:otherwise>
+        </c:choose>
+    </div>
+</section>
+
 
 <section class="container">
     <div class="summary-grid">
@@ -279,6 +350,10 @@
         </table>
     </div>
 </div>
+
+
+
+
 
 <script>
 const ctx = "${pageContext.request.contextPath}";
