@@ -1,217 +1,720 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>비즈니스 메인 페이지</title>
-    <link rel="stylesheet" href="css/1.main.css">
-</head>
-<body>
+/* 기본 초기화 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    <header>
-        <div class="container">
-            <!-- <h1 class="logo">ESS-M.S</h1>ESS Monitoring system -->
-            <h1 class="logo" onclick="location.href='1.main.html'" style="cursor:pointer;">ESS-M.S</h1>
-            <nav>
-                <ul>
-                <li><a href="1.main.html">홈</a></li>
-                <li><a href="3.serviceInfo.html">서비스 소개</a></li>
-                <li><a href="2.contact.html">문의게시판</a></li>
-                <li id="auth-menu">
-                    <a href="javascript:void(0)" class="login-btn" onclick="openLoginWindow()">로그인</a>
-                </li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+body {
+    font-family: 'Pretendard', sans-serif; 
+    line-height: 1.6;
+    color: #333;
+}
 
-    <section class="hero" onclick="location.href='3.serviceInfo.html';" style="cursor:pointer;">
-        <div class="hero-content">
-            <h2>환경과 사회를 위한 최상의 선택</h2>
-            <p>우리 아이와 함께할 미래를 위해 고민합니다.</p>
-        </div>
-    </section>
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
 
-<!-- 날씨 섹션, 예시용 실시간 X -->
-<section class="weather-section container">
-    <div class="weather-title">
-        <h3>☀️ 전국 주요 지역 날씨</h3>
-        <p>실시간 기상 상황을 확인하세요.</p>
-    </div>
-    <div class="weather-grid">
-        <div class="weather-item">
-            <span class="city">서울</span>
-            <span class="icon">☀️</span>
-            <span class="temp">12°C</span>
-        </div>
-        <div class="weather-item">
-            <span class="city">부산</span>
-            <span class="icon">☁️</span>
-            <span class="temp">15°C</span>
-        </div>
-        <div class="weather-item">
-            <span class="city">대구</span>
-            <span class="icon">☀️</span>
-            <span class="temp">14°C</span>
-        </div>
-        <div class="weather-item">
-            <span class="city">광주</span>
-            <span class="icon">⛅</span>
-            <span class="temp">13°C</span>
-        </div>
-        <div class="weather-item">
-            <span class="city">제주</span>
-            <span class="icon">🌧️</span>
-            <span class="temp">18°C</span>
-        </div>
-</section>
 
-    <section class="services container">
-        <div class="service-card" onclick="location.href='2.contact.html'" style="cursor:pointer;">
-            <h3>문의 게시판</h3>
-            <p>여러가지 문의 사항을 접수 합니다.</p>
-        </div>
-        <div class="service-card bg-info" onclick="location.href='7.newsupdate.html'" style="cursor:pointer;">
-            <h3>ESS 최신 정보</h3>
-            <p>ESS 관련 정보를 제공합니다.</p>
-        </div>
-        <div class="service-card" onclick="goToMonitoring()" style="cursor: pointer;">
-            <h3>발전량 확인 하러 가기</h3>
-            <p>로그인 후 확인 가능합니다.</p>
-        </div>
-        <!-- 발전량 확인하러 가기 눌렀을때 로그인 상태 확인 -->
-            <script>
-            function goToMonitoring() {
-                // localStorage에서 로그인 상태 확인
-                const isLoggedIn = localStorage.getItem('isLoggedIn');
+/* 상단 메뉴바 */
+header {
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
 
-                if (isLoggedIn === 'true') {
-                    // 로그인 상태면 모니터링 페이지로 이동
-                    location.href = '9.monitoring.html';
-                } else {
-                    // 로그인 상태가 아니면 경고창 띄우고 로그인창 오픈
-                    alert("로그인이 필요한 서비스입니다.");
-                    openLoginWindow(); // 기존에 만들어둔 로그인 창 열기 함수 실행
-                }
-            }
-            </script>
-    </section>
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-    <section class="board container">
-    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px;">
-        <h3 style="margin: 0;">ESS 최신 정보</h3>
-        <a href="7.newsupdate.html" style="font-size: 0.9rem; color: #666; text-decoration: none;">더보기 +</a>
-    </div>
-    
-    <table class="board-table">
-        <thead>
-            <tr>
-                <th style="width: 80px;">번호</th>
-                <th>제목</th>
-                <th style="width: 120px;">날짜</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>4</td>
-                <td class="txt-left">
-                    <a href="8.news_view.html?id=4" class="board-link">[기술] 차세대 배터리 매니지먼트 시스템(BMS) 효율 측정 결과</a>
-                </td>
-                <td>2024.03.20</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td class="txt-left">
-                    <a href="8.news_view.html?id=3" class="board-link">[공지] ESS-M.S 모니터링 시스템 정기 점검 안내 (3/25)</a>
-                </td>
-                <td>2024.03.18</td>
-            </tr>
-        </tbody>
-    </table>
-</section>
+header nav ul {
+    display: flex;
+    list-style: none;
+}
 
-    <!-- 로그인 창 열기 스크립트 -->
-    <script>
-        function openLoginWindow() {
-            window.open('4.login copy.html', 'login', 'width=500,height=600,top=100,left=100');
-        }
-    </script>
+header nav ul li {
+    margin-left: 20px;
+}
 
-    <!-- 로그인 체크기능 -->
-    <script>
-    // 페이지 로드 시 실행
-    window.onload = function() {
-        checkLoginStatus();
-    };
-
-    function checkLoginStatus() {
-        const isLoggedIn = localStorage.getItem('isLoggedIn'); // 로그인 상태 확인
-        const authMenu = document.getElementById('auth-menu');
-
-        if (isLoggedIn === 'true') {
-            const userName = localStorage.getItem('userName') || '사용자';
-            // 로그인 상태일 때: '님' 표기 및 로그아웃 버튼 표시
-            authMenu.innerHTML = `
-                <span style="margin-right:15px; color:#333; font-weight:bold;">${userName}님</span>
-                <a href="javascript:void(0)" class="login-btn" style="background:#6c757d;" onclick="handleLogout()">로그아웃</a>
-            `;
-        }
-    }
-
-    function handleLogout() {
-        if(confirm("로그아웃 하시겠습니까?")) {
-            localStorage.removeItem('isLoggedIn');
-            localStorage.removeItem('userName');
-            alert("로그아웃 되었습니다.");
-            location.reload(); // 페이지 새로고침하여 메뉴 갱신
-        }
-    }
-
-    // 기존에 만든 로그인 창 열기 함수
-    function openLoginWindow() {
-        const width = 450; const height = 620;
-        const left = (window.screen.width / 2) - (width / 2);
-        const top = (window.screen.height / 2) - (height / 2);
-        window.open('4.login.html', 'ESS_Login', `width=${width}, height=${height}, left=${left}, top=${top}, resizable=no, scrollbars=no`);
-    }
-    </script>
+header nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
 
 
 
+/* 히어로 섹션 */
+.hero {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../photo/자연 풍경(도시포함).jpg');
+    background-size: cover;
+    background-position: center;
+    height: 500px;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
 
-<!-- 페이지 맨 아래 회사 정보, 주소, 연락처 공간 -->
-    <footer>
-    <div class="container footer-content">
-        <div class="footer-info">
-            <h2 class="footer-logo">ESS-M.S</h2>
-            <p>스마트 에너지 모니터링 시스템 전문 기업</p>
-            <address>
-                부산광역시 범내골 kh 학원 <br>
-                대표전화: 051-123-4567 | 이메일: info@ess-ms.com
-            </address>
-            <p class="copyright">&copy; 2026 ESS-Monitoring System. All Rights Reserved.</p>
-        </div>
-        
-        <div class="footer-links">
-            <h4>Quick Links</h4>
-            <ul>
-                <li><a href="1.main.html">홈</a></li>
-                <li><a href="3.serviceInfo.html">서비스 소개</a></li>
-                <li><a href="2.contact.html">문의게시판</a></li>
-                <li><a href="7.newsupdate.html">최신 정보</a></li>
-            </ul>
-        </div>
+.hero h2 { font-size: 3rem; margin-bottom: 10px; }
+.btn {
+    padding: 10px 25px;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    border-radius: 5px;
+}
 
-        <div class="footer-sns">
-            <h4>Follow Us</h4>
-            <div class="sns-icons">
-                <span>Blog</span>
-                <span>LinkedIn</span>
-                <span>Youtube</span>
-            </div>
-        </div>
-    </div>
-</footer>
 
-</body>
-</html>
+
+/* 서비스 소개 */
+.services {
+    display: flex;
+    gap: 20px;
+    padding: 60px 0;
+}
+
+.service-card {
+    flex: 1;
+    padding: 30px;
+    background: #f9f9f9;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 61, 124, 0.12); /* 블루톤 그림자 */
+    border-color: var(--primary-color);
+}
+
+
+/* 게시판 */
+.board { padding: 40px 0; }
+.board-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.board-table th, .board-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+}
+
+
+
+.contact-form .btn:hover {
+    background-color: #0056b3;
+}
+
+
+.board-table th { background: #f4f4f4; }
+
+
+
+/* --------로그인 버튼 -----------*/
+/* 기존 네비게이션 스타일 유지 및 로그인 버튼 강조 */
+header nav ul {
+    display: flex;
+    list-style: none;
+    align-items: center; /* 세로 중앙 정렬 */
+}
+
+header nav ul li {
+    margin-left: 20px;
+}
+
+header nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+header nav ul li a:hover {
+    color: #007bff; /* 마우스 올렸을 때 강조색 */
+}
+
+/* 로그인 버튼 전용 스타일 */
+.login-btn {
+    padding: 7px 10px;
+    border: 2px solid #007bff; /* 파란색 테두리 */
+    border-radius: 10px;       /* 둥근 버튼 형태 */
+    color: #007bff !important; /* 글자색 강제 지정 */
+    transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+    background-color: #007bff; /* 마우스 올리면 배경이 파란색으로 */
+    color: #fff !important;    /* 글자색은 흰색으로 */
+}
+
+/* -------- 로그인 탭 스타일 ----------- */
+/* 로그인 페이지 전체를 감싸는 영역 (헤더 제외 높이 조절) */
+.login-page-wrapper {
+    background-color: #f4f7f9;
+    min-height: calc(100vh - 70px); /* 헤더 높이를 뺀 나머지 전체 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 0;
+}
+
+.login-type-tabs {
+    display: flex;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #eee;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    background: none;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #999;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.tab-btn.active {
+    color: #007bff;
+    border-bottom: 2px solid #007bff; /* 선택된 탭 강조 */
+}
+
+.tab-btn:hover {
+    color: #007bff;
+}
+/*  약관 동의 페이지 스타일  */
+/* 약관 컨테이너 폭 확장 */
+.consent-container { 
+    max-width: 900px; /* 기존 700px에서 900px로 대폭 확장 */
+    width: 95%; /* 모바일 대응을 위해 너비 비율 유지 */
+    margin: 0 auto; 
+    padding: 50px; /* 내부 여백을 더 줘서 답답함을 해소 */
+    background: #fff; 
+    border-radius: 12px; 
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1); 
+}
+
+/* 약관 텍스트 박스 높이 및 글꼴 최적화 */
+.terms-text { 
+    height: 250px; /* 높이도 120px에서 250px로 확장하여 시야 확보 */
+    overflow-y: scroll; 
+    border: 1px solid #e1e1e1; 
+    padding: 20px; 
+    font-size: 0.95rem; /* 글자 크기를 살짝 키워 가독성 향상 */
+    color: #444; 
+    background: #fdfdfd; 
+    margin-bottom: 15px;
+    line-height: 1.8; /* 줄 간격을 넓혀 눈의 피로도 감소 */
+    border-radius: 8px;
+    text-align: justify; /* 텍스트 양끝 정렬로 정갈하게 배치 */
+}
+
+/* 스크롤바 디자인 (세련되게 추가) */
+.terms-text::-webkit-scrollbar {
+    width: 8px;
+}
+.terms-text::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
+}
+
+/* ---------회원 가입  지역 선택 스크롤 ---------- */
+/* input과 select 태그가 동일한 디자인을 갖도록 설정 */
+.form-group input, 
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box; /* 패딩이 너비에 영향을 주지 않도록 설정 */
+    font-size: 1rem;
+    outline: none;
+}
+
+.form-group select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0,123,255,0.2);
+}
+/* ----------회원 가입 기기 선택  스타일 ----------*/
+/* 버튼형 라디오 스타일 */
+.type-button {
+    display: inline-block;
+    padding: 10px 18px;
+    margin: 5px;
+    background: #fff;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.type-button input[type="radio"] {
+    display: none; /* 실제 동그란 라디오 버튼은 숨김 */
+}
+
+/* 마우스를 올렸을 때 */
+.type-button:hover {
+    border-color: #007bff;
+    background-color: #f8fbff;
+}
+
+/* 선택(체크)되었을 때 스타일 */
+.type-button.active {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+}
+
+
+/* --------날씨 섹션 스타일 -----------*/
+.weather-section {
+    padding: 10px 10px;
+    background: #ffffff;
+    margin-top: -10px; /* Hero 섹션에 살짝 걸치게 하여 세련된 느낌 연출 */
+    position: relative;
+    z-index: 10;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.weather-title {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.weather-title h3 {
+    font-size: 1.0rem;
+    color: #2c3e50;
+}
+
+.weather-grid {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.weather-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px;
+    min-width: 50px;
+}
+
+.weather-item .city {
+    font-weight: bold;
+    font-size: 1.0rem;
+    margin-bottom: 5px;
+}
+
+.weather-item .icon {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+.weather-item .temp {
+    color: #007bff;
+    font-weight: bold;
+    font-size: 1.0rem;
+}
+
+
+
+/* --------문의 게시판 폼 스타일 -----------*/
+.contact-form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fdfdfd;
+    padding: 40px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input, 
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.form-group textarea {
+    resize: none; /* 크기 조절 방지 */
+}
+
+/* 주의사항 문구 영역의 여백 조정 */
+div[style*="background: #fff3f3"] {
+    margin: 0 !important;
+    padding: 15px 0 !important; /* 위아래 간격을 균일하게 */
+}
+
+/* 문의 폼 컨테이너와 너비를 맞춘 주의사항 박스 */
+.warning-box {
+    max-width: 600px;         /* 폼 컨테이너와 동일한 너비 */
+    margin: 20px auto 0;      /* 위쪽 간격 20px, 좌우 중앙 정렬 */
+    background: #fff3f3;      /* 연한 빨간색 배경 */
+    padding: 20px;            /* 내부 여백 */
+    border: 1px solid #ffcccc; /* 테두리도 배경보다 조금 더 진하게 */
+    border-radius: 10px;      /* 폼과 통일감을 주는 둥근 모서리 */
+    text-align: center;       /* 텍스트 중앙 정렬 */
+    box-sizing: border-box;   /* 너비 계산 오류 방지 */
+}
+
+.warning-box p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+/* -------- 서비스 소개 페이지 스타일 ----------- */
+
+.sub-hero {
+    background: #2c3e50; /* 비즈니스 블루 그레이 */
+    color: #fff;
+    padding: 40px 0;
+    text-align: center;
+}
+
+.sub-hero h2 { font-size: 2.5rem; margin-bottom: 10px; }
+
+.about-section {
+    padding: 60px 0;
+    text-align: center;
+}
+
+.about-text h3 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #007bff;
+}
+
+.about-text p {
+    max-width: 1000px;
+    margin: 0 auto;
+    font-size: 1.1rem;
+    color: #666;
+}
+
+.features-bg {
+    background: #f4f7f9;
+    padding: 80px 0;
+}
+
+.features-grid {
+    display: flex;
+    gap: 30px;
+    justify-content: space-between;
+}
+
+.feature-item {
+    flex: 1;
+    background: #fff;
+    padding: 40px 20px;
+    border-radius: 15px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateY(-10px); /* 살짝 올라가는 효과 */
+}
+
+.f-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.feature-item h4 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+
+
+/* -------- 주요 기능 섹션 스타일 ----------- */
+.key-features-section {
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.key-features-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+    color: #2c3e50;
+}
+
+.key-features-list {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.key-feature-item {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    background: #f9f9f9;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.key-feature-item:hover {
+    transform: translateX(10px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.feature-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: #007bff;
+    color: #fff;
+    font-size: 1.8rem;
+    font-weight: bold;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.key-feature-item h4 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.key-feature-item p {
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+
+/* 페이지 맨 아래 회사 정보, 주소, 연락처 공간 */
+footer {
+    background-color: #2c3e50; /* 어두운 네이비톤 */
+    color: #ecf0f1;
+    padding: 20px 0 30px;
+    margin-top: 80px; /* 본문과의 간격 */
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+.footer-info {
+    flex: 2;
+}
+
+.footer-logo {
+    font-size: 1.8rem;
+    color: #fff;
+    margin-bottom: 15px;
+}
+
+.footer-info address {
+    font-style: normal;
+    line-height: 1.6;
+    margin: 20px 0;
+    color: #bdc3c7;
+}
+
+.footer-links, .footer-sns {
+    flex: 1;
+    min-width: 150px;
+}
+
+.footer-links h4, .footer-sns h4 {
+    color: #fff;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+}
+
+.footer-links ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    color: #bdc3c7;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: #007bff;
+}
+
+.sns-icons span {
+    display: inline-block;
+    margin-right: 15px;
+    color: #bdc3c7;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.copyright {
+    margin-top: 40px;
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    border-top: 1px solid #3e4f5f;
+    padding-top: 20px;
+}
+
+/* 9.monitoring  컨테이너 */
+/* 시스템 상태 전용 컨테이너 */
+/* [수정] 시스템 상태 전용 컨테이너: 세로 배치 및 중앙 정렬 */
+.status-wrapper {
+    display: flex;
+    flex-direction: column; /* 게이지 아래에 범례가 오도록 세로 배치 */
+    align-items: center;    /* 수평 중앙 정렬 */
+    justify-content: center;
+    gap: 15px;              /* 게이지와 범례 사이의 여유 간격 */
+    margin-top: 25px;       /* 헤더(시스템 상태 글자)와의 간격 */
+}
+
+/* [수정] 2x2 그리드 범례: 위험/정상, 고장/보통 순서 */
+.status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2열(가로로 2개씩) 배치 */
+    gap: 8px 25px;          /* 상하 8px, 좌우 25px 간격으로 시인성 확보 */
+    text-align: left;
+}
+
+/* [통합] 범례 아이템 스타일 */
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;              /* 컬러박스와 글자 사이 간격 */
+    font-size: 0.85rem;     /* 글자 크기 살짝 키움 */
+    color: var(--text-sub);
+    cursor: default;
+    min-width: 60px;        /* 정렬이 깨지지 않게 최소 폭 지정 */
+}
+
+/* [통합] 컬러 박스 (ㅁ) 기본 스타일 */
+.color-box {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;     /* 살짝 둥근 사각형 */
+    background: var(--gray-off); /* 비활성화 시 어두운 회색 */
+    transition: all 0.3s ease;   /* 색상 변경 시 부드럽게 전환 */
+}
+
+/* [확정] 활성화 상태별 색상 및 발광 효과(Glow) */
+.box-normal.active { background: #48bb78; box-shadow: 0 0 10px rgba(72, 187, 120, 0.6); }
+.box-common.active { background: #3498db; box-shadow: 0 0 10px rgba(52, 152, 219, 0.6); }
+.box-warn.active   { background: #f6ad55; box-shadow: 0 0 10px rgba(246, 173, 85, 0.6); }
+.box-fault.active  { background: #f56565; box-shadow: 0 0 10px rgba(245, 101, 101, 0.6); }
+
+
+
+/* 제어 이력 로그 아이템 스타일 */
+.log-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.8rem;
+    transition: background 0.2s;
+}
+
+.log-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.log-time {
+    color: var(--text-sub);
+    font-size: 0.7rem;
+}
+
+.log-user {
+    color: var(--accent);
+    font-weight: bold;
+}
+
+.log-action {
+    color: var(--text-main);
+    margin-top: 2px;
+}
+
+/* 결과 태그 (성공/실패) */
+.log-status {
+    font-size: 0.7rem;
+    padding: 1px 5px;
+    border-radius: 3px;
+}
+.status-success { background: rgba(72, 187, 120, 0.2); color: #48bb78; }
+.status-fail { background: rgba(245, 101, 101, 0.2); color: #f56565; }
+
+
+/* ---------분석 화면  ---------*/
+/* 화면 전환을 위한 기본 설정 */
+.content-section { display: none; } /* 모든 섹션 숨김 */
+.content-section.active { display: flex; flex-direction: column; gap: 20px; } /* 활성 섹션만 표시 */
+
+/* 분석 화면 전용 스타일 */
+.analysis-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* 대형 차트와 데이터 요약 */
+    gap: 20px;
+}
+.chart-full-card {
+    background: var(--bg-card);
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid var(--border);
+    height: 450px;
+}
