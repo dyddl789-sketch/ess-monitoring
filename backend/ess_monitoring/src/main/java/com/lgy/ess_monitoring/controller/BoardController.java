@@ -81,7 +81,7 @@ public class BoardController {
 		
 		// boardNo 파라미터를 꺼내서 int로 변환
 	    // 이 값으로 어떤 게시글을 조회할지 결정함
-		int boardNo = Integer.parseInt(param.get("boardNo"));
+		int boardNo = Integer.parseInt(param.get("board_no"));
 		
 		//조회수 증가
 		service.increaseHit(boardNo);
@@ -135,7 +135,7 @@ public class BoardController {
 	    }
 
 	    // 3. 수정하려는 게시글 번호를 가져옴
-	    int boardNo = Integer.parseInt(param.get("boardNo"));
+	    int boardNo = Integer.parseInt(param.get("board_no"));
 
 	    // 4. DB에서 해당 게시글의 작성자 member_id를 조회
 	    int writerMemberId = service.getWriterMemberId(boardNo);
@@ -175,30 +175,46 @@ public class BoardController {
 	}
 	
 	@RequestMapping("/delete")
-	public String delete(@RequestParam HashMap<String, String> param, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr) {
-		log.info("@# delete()");
-		log.info("@# cri=>" + cri);
-		
-		service.delete(param);
-		rttr.addAttribute("pageNum", cri.getPageNum());
-		rttr.addAttribute("amount", cri.getAmount());
-		
-		return "redirect:list";
+	public String delete(@RequestParam HashMap<String, String> param,
+	                     @ModelAttribute("cri") Criteria cri,
+	                     RedirectAttributes rttr,
+	                     HttpSession session) {
+
+	    Integer loginMemberId = (Integer) session.getAttribute("member_id");
+
+	    if (loginMemberId == null) {
+	        return "redirect:/login_view";
+	    }
+
+	    String boardNoStr = param.get("board_no");
+
+	    if (boardNoStr == null || boardNoStr.equals("")) {
+	        throw new RuntimeException("board_no 없음");
+	    }
+
+	    int boardNo = Integer.parseInt(boardNoStr);
+
+	    int writerMemberId = service.getWriterMemberId(boardNo);
+
+	    if (!loginMemberId.equals(writerMemberId)) {
+	        rttr.addAttribute("board_no", boardNo);
+	        rttr.addAttribute("pageNum", cri.getPageNum());
+	        rttr.addAttribute("amount", cri.getAmount());
+	        rttr.addAttribute("type", cri.getType());
+	        rttr.addAttribute("keyword", cri.getKeyword());
+
+	        return "redirect:/board_content_view";
+	    }
+
+	    service.delete(param);
+
+	    rttr.addAttribute("pageNum", cri.getPageNum());
+	    rttr.addAttribute("amount", cri.getAmount());
+	    rttr.addAttribute("type", cri.getType());
+	    rttr.addAttribute("keyword", cri.getKeyword());
+
+	    return "redirect:/board_list";
 	}
 	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

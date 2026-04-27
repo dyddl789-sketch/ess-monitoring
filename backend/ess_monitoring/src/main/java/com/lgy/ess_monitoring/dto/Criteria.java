@@ -1,6 +1,5 @@
 package com.lgy.ess_monitoring.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -28,7 +27,7 @@ public class Criteria {
 	
 	public String[] getTypeArr() {
 //		type 이 없으면 빈 스트링 객체(기본 목록 조회), 있으면 분리
-		return type == null ? new String[] {} : type.split("");
+		 return type == null || type.trim().equals("") ? new String[] {} : type.split("");
 	}
 	
 	//페이징 시작 위치
