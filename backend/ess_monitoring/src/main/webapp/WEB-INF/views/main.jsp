@@ -91,8 +91,6 @@
 .badge.yellow { background: #fef3c7; color: #92400e; }
 .badge.red { background: #fee2e2; color: #991b1b; }
 
-
-
 @media (max-width: 900px) {
     .summary-grid, .menu-grid { grid-template-columns: repeat(2, 1fr); }
 }
@@ -212,12 +210,9 @@
     <h3>
         ☀️
         <c:choose>
-            <%-- 날씨 데이터가 없으면 기본 제목 표시 --%>
             <c:when test="${empty weatherList}">
                 내 지역 날씨 예보
             </c:when>
-
-            <%-- 날씨 데이터가 있으면 첫 번째 데이터의 city 표시 --%>
             <c:otherwise>
                 ${weatherList[0].city} 날씨 예보
             </c:otherwise>
@@ -226,25 +221,15 @@
 
     <div class="weather-summary">
         <c:choose>
-            <%-- Controller에서 weatherList가 비어 있으면 안내 문구 출력 --%>
             <c:when test="${empty weatherList}">
                 <span>날씨 데이터가 없습니다.</span>
             </c:when>
-
-            <%-- 날씨 데이터가 있으면 시간대별 예보 출력 --%>
             <c:otherwise>
                 <c:forEach var="weather" items="${weatherList}">
                     <span class="weather-item">
-                        <%-- 예보 시간 예: 09:00 --%>
                         ${weather.fcstTime}
-
-                        <%-- 날씨 아이콘 예: ☀️, ⛅, ☁️, 🌧️ --%>
                         ${weather.weatherIcon}
-
-                        <%-- 하늘 상태 예: 맑음, 구름많음, 흐림 --%>
                         ${weather.skyStatus}
-
-                        <%-- 기온 예: 16℃ --%>
                         ${weather.temperature}
                     </span>
                 </c:forEach>
@@ -253,24 +238,35 @@
     </div>
 </section>
 
-
 <section class="container">
     <div class="summary-grid">
         <div class="summary-card">
             <h4>등록 기기</h4>
-            <strong>0대</strong>
+            <strong id="deviceCount">
+                <c:choose>
+                    <c:when test="${empty deviceCount}">
+                        0대
+                    </c:when>
+                    <c:otherwise>
+                        ${deviceCount}대
+                    </c:otherwise>
+                </c:choose>
+            </strong>
             <p>ESS 장비 등록 후 표시</p>
         </div>
+
         <div class="summary-card">
             <h4>운영상태</h4>
             <strong class="status-normal">정상</strong>
             <p>최근 알림 기준</p>
         </div>
+
         <div class="summary-card">
             <h4>평균 SOC</h4>
             <strong>--%</strong>
             <p>모니터링 연동 후 표시</p>
         </div>
+
         <div class="summary-card">
             <h4>미확인 알림</h4>
             <strong class="status-warning">0건</strong>
