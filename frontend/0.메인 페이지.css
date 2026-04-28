@@ -92,7 +92,11 @@ header nav ul li a {
     text-align: center;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
-
+.service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 61, 124, 0.12); /* 블루톤 그림자 */
+    border-color: var(--primary-color);
+}
 
 
 /* 게시판 */
@@ -372,7 +376,29 @@ header nav ul li a:hover {
     resize: none; /* 크기 조절 방지 */
 }
 
+/* 주의사항 문구 영역의 여백 조정 */
+div[style*="background: #fff3f3"] {
+    margin: 0 !important;
+    padding: 15px 0 !important; /* 위아래 간격을 균일하게 */
+}
 
+/* 문의 폼 컨테이너와 너비를 맞춘 주의사항 박스 */
+.warning-box {
+    max-width: 600px;         /* 폼 컨테이너와 동일한 너비 */
+    margin: 20px auto 0;      /* 위쪽 간격 20px, 좌우 중앙 정렬 */
+    background: #fff3f3;      /* 연한 빨간색 배경 */
+    padding: 20px;            /* 내부 여백 */
+    border: 1px solid #ffcccc; /* 테두리도 배경보다 조금 더 진하게 */
+    border-radius: 10px;      /* 폼과 통일감을 주는 둥근 모서리 */
+    text-align: center;       /* 텍스트 중앙 정렬 */
+    box-sizing: border-box;   /* 너비 계산 오류 방지 */
+}
+
+.warning-box p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #333;
+}
 
 /* -------- 서비스 소개 페이지 스타일 ----------- */
 
@@ -625,3 +651,70 @@ footer {
 .box-common.active { background: #3498db; box-shadow: 0 0 10px rgba(52, 152, 219, 0.6); }
 .box-warn.active   { background: #f6ad55; box-shadow: 0 0 10px rgba(246, 173, 85, 0.6); }
 .box-fault.active  { background: #f56565; box-shadow: 0 0 10px rgba(245, 101, 101, 0.6); }
+
+
+
+/* 제어 이력 로그 아이템 스타일 */
+.log-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.8rem;
+    transition: background 0.2s;
+}
+
+.log-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.log-time {
+    color: var(--text-sub);
+    font-size: 0.7rem;
+}
+
+.log-user {
+    color: var(--accent);
+    font-weight: bold;
+}
+
+.log-action {
+    color: var(--text-main);
+    margin-top: 2px;
+}
+
+/* 결과 태그 (성공/실패) */
+.log-status {
+    font-size: 0.7rem;
+    padding: 1px 5px;
+    border-radius: 3px;
+}
+.status-success { background: rgba(72, 187, 120, 0.2); color: #48bb78; }
+.status-fail { background: rgba(245, 101, 101, 0.2); color: #f56565; }
+
+
+/* ---------분석 화면  ---------*/
+/* 화면 전환을 위한 기본 설정 */
+.content-section { display: none; } /* 모든 섹션 숨김 */
+.content-section.active { display: flex; flex-direction: column; gap: 20px; } /* 활성 섹션만 표시 */
+
+/* 분석 화면 전용 스타일 */
+.analysis-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* 대형 차트와 데이터 요약 */
+    gap: 20px;
+}
+.chart-full-card {
+    background: var(--bg-card);
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid var(--border);
+    height: 450px;
+}
