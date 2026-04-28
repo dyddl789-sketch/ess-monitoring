@@ -11,166 +11,560 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <style>
-.container { width: 80%; margin: 0 auto; }
-.hero {
-    background: linear-gradient(135deg, #0f766e, #0f172a);
-    color: white;
-    padding: 60px 0;
-    margin-bottom: 25px;
+/* ========================= */
+/* 기본 설정 */
+/* ========================= */
+
+* {
+    box-sizing: border-box;
 }
-.hero-content { width: 80%; margin: 0 auto; }
-.hero h2 { font-size: 2rem; margin-bottom: 10px; }
+
+body {
+    margin: 0;
+    background: #f4f7fb;
+    color: #0f172a;
+    font-family: 'Malgun Gothic', Arial, sans-serif;
+}
+
+button {
+    font-family: inherit;
+}
+
+.container {
+    width: 1000px;
+    max-width: calc(100% - 40px);
+    margin: 0 auto;
+}
+
+/* ========================= */
+/* Hero 영역 */
+/* ========================= */
+
+.hero {
+    position: relative;
+    min-height: 430px;
+    margin-bottom: 0;
+    padding: 0;
+    color: white;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(15, 118, 110, 0.78) 0%,
+            rgba(15, 23, 42, 0.72) 58%,
+            rgba(15, 23, 42, 0.62) 100%
+        ),
+        url('${pageContext.request.contextPath}/resources/img/solar-main.jpg') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 18% 35%, rgba(20, 184, 166, 0.25), transparent 28%),
+        radial-gradient(circle at 80% 20%, rgba(14, 165, 233, 0.20), transparent 26%);
+    pointer-events: none;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    width: 1000px;
+    max-width: calc(100% - 40px);
+    margin: 0 auto;
+    padding-bottom: 60px;
+}
+
+.hero-badge {
+    display: inline-block;
+    padding: 8px 16px;
+    margin-bottom: 22px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    font-size: 13px;
+    font-weight: 700;
+    color: #d1fae5;
+}
+
+.hero h2 {
+    margin: 0 0 18px;
+    font-size: 2.9rem;
+    line-height: 1.18;
+    font-weight: 900;
+    letter-spacing: -1.5px;
+}
+
+.hero p {
+    margin: 0 0 28px;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #e5e7eb;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.hero-btn {
+    border: none;
+    border-radius: 10px;
+    padding: 13px 24px;
+    background: #06b6d4;
+    color: white;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(6, 182, 212, 0.25);
+    transition: 0.2s;
+}
+
+.hero-btn.secondary {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.42);
+    box-shadow: none;
+}
+
+.hero-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* ========================= */
+/* 운영 현황 요약 */
+/* ========================= */
+
+.summary-overlap {
+    position: relative;
+    z-index: 5;
+    margin-top: -70px;
+}
+
+.summary-panel {
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid #e2e8f0;
+    border-radius: 22px;
+    padding: 24px;
+    box-shadow: 0 18px 36px rgba(15, 23, 42, 0.16);
+}
+
+.summary-panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.summary-panel-title {
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #0f172a;
+}
+
+.summary-panel-sub {
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
 .summary-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 15px;
-    margin: 25px 0;
 }
-.summary-card {
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    padding: 18px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.06);
-}
-.summary-card h4 { margin: 0 0 10px; color: #555; }
-.summary-card strong { font-size: 1.6rem; }
-.status-normal { color: #16a34a; }
-.status-warning { color: #f59e0b; }
-.status-danger { color: #dc2626; }
 
-.menu-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    margin: 25px 0;
-}
-.service-card {
-    background: #fff;
+.summary-card {
+    background: #ffffff;
+    border: 1px solid #dbe4f0;
+    border-radius: 16px;
     padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+}
+
+.summary-card h4 {
+    margin: 0 0 12px;
+    color: #475569;
+    font-size: 0.92rem;
+}
+
+.summary-card strong {
+    display: block;
+    font-size: 1.8rem;
+    line-height: 1.1;
+    margin-bottom: 10px;
+    color: #0f172a;
+}
+
+.summary-card p {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.86rem;
+}
+
+.status-normal {
+    color: #16a34a !important;
+}
+
+.status-warning {
+    color: #f59e0b !important;
+}
+
+.status-danger {
+    color: #dc2626 !important;
+}
+
+/* ========================= */
+/* 환영 문구 */
+/* ========================= */
+
+.welcome-area {
+    margin-top: 24px;
+    margin-bottom: 18px;
+}
+
+.welcome-area h3 {
+    margin: 0 0 6px;
+    font-size: 1.1rem;
+}
+
+.welcome-area p {
+    margin: 0;
+    color: #475569;
+}
+
+.login-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+}
+
+.login-card button {
+    border: none;
+    border-radius: 8px;
+    padding: 9px 14px;
+    margin-right: 6px;
+    background: #0f766e;
+    color: white;
     cursor: pointer;
-    transition: 0.2s;
 }
-.service-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 14px rgba(0,0,0,0.1);
+
+/* ========================= */
+/* 날씨 + 빠른 실행 */
+/* ========================= */
+
+.dashboard-main-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 22px;
+    align-items: start;
+    margin-top: 26px;
+    margin-bottom: 28px;
 }
-.service-card h3 { margin-top: 0; }
+
+.dashboard-card {
+    background: #ffffff;
+    border-radius: 22px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.07);
+    padding: 20px;
+}
+
+.dashboard-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.dashboard-card-title {
+    font-size: 19px;
+    font-weight: 900;
+    color: #0f172a;
+}
+
+.dashboard-card-sub {
+    font-size: 12px;
+    color: #64748b;
+}
+
+/* ========================= */
+/* 날씨 카드 */
+/* ========================= */
+
+.weather-dashboard-layout {
+    display: grid;
+    grid-template-columns: 170px 1fr;
+    gap: 12px;
+    align-items: stretch;
+}
+
+.weather-dashboard-main {
+    border-radius: 18px;
+    padding: 16px 14px;
+    background: linear-gradient(180deg, #ecfeff 0%, #f8fdff 100%);
+    border: 1px solid #bae6fd;
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.weather-dashboard-city {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.weather-dashboard-condition {
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #0369a1;
+}
+
+.weather-dashboard-big {
+    font-size: 34px;
+    font-weight: 900;
+    color: #0f172a;
+    line-height: 1;
+    margin: 10px 0 4px;
+}
+
+.weather-dashboard-info {
+    font-size: 11.5px;
+    color: #64748b;
+    line-height: 1.45;
+}
+
+.weather-dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.weather-dashboard-item {
+    border-radius: 14px;
+    padding: 11px 6px;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.04);
+    min-height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 7px;
+    align-items: center;
+    text-align: center;
+}
+
+.weather-dashboard-time {
+    font-size: 12px;
+    font-weight: 800;
+    color: #334155;
+}
+
+.weather-dashboard-icon {
+    font-size: 23px;
+    line-height: 1;
+}
+
+.weather-dashboard-status {
+    font-size: 12px;
+    color: #475569;
+    font-weight: 700;
+}
+
+.weather-dashboard-temp {
+    font-size: 19px;
+    font-weight: 900;
+    color: #0f172a;
+}
+
+.weather-dashboard-empty {
+    grid-column: 1 / -1;
+    border-radius: 16px;
+    padding: 24px;
+    background: #ffffff;
+    border: 1px dashed #93c5fd;
+    color: #64748b;
+    text-align: center;
+}
+
+/* ========================= */
+/* 빠른 실행: 무조건 2열 2행 */
+/* ========================= */
+
+.force-quick-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    width: 100%;
+}
+
+.force-quick-card {
+    min-width: 0;
+    min-height: 112px;
+    padding: 15px;
+    border-radius: 15px;
+    border: 1px solid #dbeafe;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.04);
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.force-quick-card:hover {
+    transform: translateY(-2px);
+    border-color: #7dd3fc;
+    box-shadow: 0 12px 20px rgba(14, 165, 233, 0.10);
+}
+
+.force-quick-icon {
+    font-size: 20px;
+    margin-bottom: 8px;
+    line-height: 1;
+}
+
+.force-quick-title {
+    font-size: 16px;
+    font-weight: 900;
+    color: #0f172a;
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+
+.force-quick-desc {
+    font-size: 13px;
+    line-height: 1.45;
+    color: #64748b;
+}
+
+/* ========================= */
+/* 작업 영역 */
+/* ========================= */
 
 #contentArea {
-    margin-top: 20px;
-    padding: 25px;
-    border: 1px solid #ddd;
-    border-radius: 14px;
-    min-height: 260px;
+    margin-top: 28px;
+    margin-bottom: 50px;
+    padding: 28px;
+    border: 1px solid #e2e8f0;
+    border-radius: 22px;
+    min-height: 180px;
     background: #fff;
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.07);
 }
+
 .panel-title {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
+
+.panel-title h3 {
+    margin-top: 0;
+}
+
 .fake-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 15px;
+    background: white;
+    font-size: 14px;
 }
-.fake-table th, .fake-table td {
+
+.fake-table th,
+.fake-table td {
     border-bottom: 1px solid #eee;
     padding: 10px;
     text-align: left;
 }
+
+.fake-table th {
+    background: #f8fafc;
+    color: #334155;
+    font-weight: 800;
+}
+
+.fake-table button {
+    border: none;
+    border-radius: 8px;
+    padding: 7px 11px;
+    margin: 0 2px;
+    background: #0f172a;
+    color: white;
+    cursor: pointer;
+    font-size: 13px;
+}
+
 .badge {
     padding: 4px 8px;
     border-radius: 10px;
     font-size: 0.8rem;
 }
-.badge.green { background: #dcfce7; color: #166534; }
-.badge.yellow { background: #fef3c7; color: #92400e; }
-.badge.red { background: #fee2e2; color: #991b1b; }
 
-@media (max-width: 900px) {
-    .summary-grid, .menu-grid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 600px) {
-    .summary-grid, .menu-grid { grid-template-columns: 1fr; }
+.badge.green {
+    background: #dcfce7;
+    color: #166534;
 }
 
-.site-header {
-    background: #ffffff;
-    border-bottom: 1px solid #e5e7eb;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+.badge.yellow {
+    background: #fef3c7;
+    color: #92400e;
 }
 
-.header-inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 70px;
+.badge.red {
+    background: #fee2e2;
+    color: #991b1b;
 }
 
-.logo {
-    margin: 0;
-    font-size: 1.6rem;
+/* ========================= */
+/* 반응형 */
+/* ========================= */
+
+@media (max-width: 1100px) {
+    .dashboard-main-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .weather-dashboard-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
-.logo a {
-    text-decoration: none;
-    color: #0f766e;
-    font-weight: bold;
-}
+@media (max-width: 700px) {
+    .hero {
+        min-height: 390px;
+    }
 
-.header-menu {
-    display: flex;
-    gap: 24px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    align-items: center;
-}
+    .hero h2 {
+        font-size: 2rem;
+    }
 
-.header-menu a {
-    text-decoration: none;
-    color: #111827;
-    font-weight: 500;
-}
+    .hero-buttons {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 
-.header-menu a:hover {
-    color: #0f766e;
-}
+    .summary-grid,
+    .weather-dashboard-grid,
+    .force-quick-grid {
+        grid-template-columns: 1fr;
+    }
 
-.user-label {
-    color: #0f766e;
-    font-weight: bold;
-}
-
-.weather-section {
-    margin-top: 20px;
-    margin-bottom: 25px;
-}
-
-.weather-summary {
-    background: #f0fdfa;
-    border: 1px solid #99f6e4;
-    border-radius: 14px;
-    padding: 16px 18px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-}
-
-.weather-item {
-    background: white;
-    border: 1px solid #ccfbf1;
-    border-radius: 999px;
-    padding: 8px 12px;
-    font-size: 0.95rem;
-    color: #0f172a;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    .summary-overlap {
+        margin-top: -40px;
+    }
 }
 </style>
 </head>
@@ -185,18 +579,82 @@
 
 <section class="hero">
     <div class="hero-content">
-        <h2>ESS 실시간 에너지 관리 플랫폼</h2>
-        <p>기기 등록부터 배터리 상태, 발전량, 알림 이력까지 한 화면에서 관리합니다.</p>
+        <div class="hero-badge">Solar ESS Monitoring Platform</div>
+
+        <h2>
+            실시간 ESS 모니터링을<br>
+            더 직관적이고 안정적으로
+        </h2>
+
+        <p>
+            태양광 ESS 장비의 상태, 전압, 전류, SOC, 알림 이력을<br>
+            한눈에 확인하고 빠르게 관리할 수 있는 통합 대시보드입니다.
+        </p>
+
+        <div class="hero-buttons">
+            <button type="button" class="hero-btn" onclick="checkLogin(loadRegister)">
+                기기 등록
+            </button>
+
+            <button type="button" class="hero-btn secondary" onclick="checkLogin(loadDeviceList)">
+                등록 기기 보기
+            </button>
+        </div>
     </div>
 </section>
 
-<section class="container">
+<section class="container summary-overlap">
+    <div class="summary-panel">
+        <div class="summary-panel-head">
+            <div class="summary-panel-title">운영 현황 요약</div>
+            <div class="summary-panel-sub">회원 대표 기기 기준</div>
+        </div>
+
+        <div class="summary-grid">
+            <div class="summary-card">
+                <h4>등록 기기</h4>
+                <strong id="deviceCount">
+                    <c:choose>
+                        <c:when test="${empty deviceCount}">
+                            0대
+                        </c:when>
+                        <c:otherwise>
+                            ${deviceCount}대
+                        </c:otherwise>
+                    </c:choose>
+                </strong>
+                <p>ESS 장비 등록 후 표시</p>
+            </div>
+
+            <div class="summary-card">
+                <h4>운영상태</h4>
+                <strong class="status-normal">정상</strong>
+                <p>최근 알림 기준</p>
+            </div>
+
+            <div class="summary-card">
+                <h4>평균 SOC</h4>
+                <strong>--%</strong>
+                <p>모니터링 연동 후 표시</p>
+            </div>
+
+            <div class="summary-card">
+                <h4>미확인 알림</h4>
+                <strong class="status-warning">0건</strong>
+                <p>알림 이력 연동 후 표시</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container welcome-area">
     <c:if test="${empty sessionScope.member_id}">
-        <div class="service-card">
+        <div class="login-card">
             <h3>👋 방문을 환영합니다</h3>
             <p>로그인하면 기기 등록, 모니터링, 알림 관리 기능을 사용할 수 있습니다.</p>
-            <button onclick="goLogin()">로그인</button>
-            <button onclick="goJoin()">회원가입</button>
+            <br>
+            <button type="button" onclick="goLogin()">로그인</button>
+            <button type="button" onclick="goJoin()">회원가입</button>
         </div>
     </c:if>
 
@@ -206,117 +664,119 @@
     </c:if>
 </section>
 
-<section class="weather-section container">
-    <h3>
-        ☀️
-        <c:choose>
-            <c:when test="${empty weatherList}">
-                내 지역 날씨 예보
-            </c:when>
-            <c:otherwise>
-                ${weatherList[0].city} 날씨 예보
-            </c:otherwise>
-        </c:choose>
-    </h3>
+<section class="container dashboard-main-grid">
 
-    <div class="weather-summary">
-        <c:choose>
-            <c:when test="${empty weatherList}">
-                <span>날씨 데이터가 없습니다.</span>
-            </c:when>
-            <c:otherwise>
-                <c:forEach var="weather" items="${weatherList}">
-                    <span class="weather-item">
-                        ${weather.fcstTime}
-                        ${weather.weatherIcon}
-                        ${weather.skyStatus}
-                        ${weather.temperature}
-                    </span>
-                </c:forEach>
-            </c:otherwise>
-        </c:choose>
-    </div>
-</section>
-
-<section class="container">
-    <div class="summary-grid">
-        <div class="summary-card">
-            <h4>등록 기기</h4>
-            <strong id="deviceCount">
+    <!-- 날씨 박스 -->
+    <div class="dashboard-card weather-dashboard-card">
+        <div class="dashboard-card-head">
+            <div class="dashboard-card-title">
+                ☀
                 <c:choose>
-                    <c:when test="${empty deviceCount}">
-                        0대
+                    <c:when test="${empty weatherList}">
+                        내 지역 날씨 예보
                     </c:when>
                     <c:otherwise>
-                        ${deviceCount}대
+                        ${weatherList[0].city} 날씨 예보
                     </c:otherwise>
                 </c:choose>
-            </strong>
-            <p>ESS 장비 등록 후 표시</p>
+            </div>
+
+            <div class="dashboard-card-sub">
+                회원 대표지역 기준 · 단기예보 API 연동
+            </div>
         </div>
 
-        <div class="summary-card">
-            <h4>운영상태</h4>
-            <strong class="status-normal">정상</strong>
-            <p>최근 알림 기준</p>
-        </div>
+        <div class="weather-dashboard-layout">
+            <div class="weather-dashboard-main">
+                <c:choose>
+                    <c:when test="${empty weatherList}">
+                        <div>
+                            <div class="weather-dashboard-city">내 지역</div>
+                            <div class="weather-dashboard-condition">날씨 데이터 없음</div>
+                            <div class="weather-dashboard-big">--℃</div>
+                        </div>
 
-        <div class="summary-card">
-            <h4>평균 SOC</h4>
-            <strong>--%</strong>
-            <p>모니터링 연동 후 표시</p>
-        </div>
+                        <div class="weather-dashboard-info">
+                            날씨 데이터가 조회되지 않았습니다.<br>
+                            API 응답 또는 회원 대표지역을 확인하세요.
+                        </div>
+                    </c:when>
 
-        <div class="summary-card">
-            <h4>미확인 알림</h4>
-            <strong class="status-warning">0건</strong>
-            <p>알림 이력 연동 후 표시</p>
+                    <c:otherwise>
+                        <div>
+                            <div class="weather-dashboard-city">${weatherList[0].city}</div>
+                            <div class="weather-dashboard-condition">
+                                ${weatherList[0].weatherIcon}
+                                ${weatherList[0].skyStatus}
+                            </div>
+                            <div class="weather-dashboard-big">${weatherList[0].temperature}</div>
+                        </div>
+
+                        <div class="weather-dashboard-info">
+                            현재 시간 이후 예보를 기준으로<br>
+                            ESS 운전환경을 함께 확인합니다.
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+
+            <div class="weather-dashboard-grid">
+                <c:choose>
+                    <c:when test="${empty weatherList}">
+                        <div class="weather-dashboard-empty">
+                            날씨 데이터가 없습니다.
+                        </div>
+                    </c:when>
+
+                    <c:otherwise>
+                        <c:forEach var="weather" items="${weatherList}">
+                            <div class="weather-dashboard-item">
+                                <div class="weather-dashboard-time">${weather.fcstTime}</div>
+                                <div class="weather-dashboard-icon">${weather.weatherIcon}</div>
+                                <div class="weather-dashboard-status">${weather.skyStatus}</div>
+                                <div class="weather-dashboard-temp">${weather.temperature}</div>
+                            </div>
+                        </c:forEach>
+                    </c:otherwise>
+                </c:choose>
+            </div>
         </div>
     </div>
-</section>
 
-<section class="container">
-    <div class="menu-grid">
-        <div class="service-card" id="btnRegister">
-            <h3>🔧 기기 등록</h3>
-            <p>ESS 장비와 그룹을 등록합니다.</p>
+    <!-- 빠른 실행: 2열 2행 고정 -->
+    <div class="dashboard-card quick-dashboard-card">
+        <div class="dashboard-card-head">
+            <div class="dashboard-card-title">빠른 실행</div>
+            <div class="dashboard-card-sub">자주 사용하는 메뉴</div>
         </div>
 
-        <div class="service-card" id="btnDeviceList">
-            <h3>🗂 기기 목록</h3>
-            <p>등록된 장비의 상태를 확인합니다.</p>
-        </div>
+        <div class="force-quick-grid">
+            <div class="force-quick-card" id="btnDeviceList">
+                <div class="force-quick-icon">🗂</div>
+                <div class="force-quick-title">기기 목록</div>
+                <div class="force-quick-desc">등록된 장비 목록과 상세 정보를 확인합니다.</div>
+            </div>
 
-        <div class="service-card" id="btnMonitor">
-            <h3>📊 실시간 모니터링</h3>
-            <p>SOC, 전압, 전류, 온도 데이터를 확인합니다.</p>
-        </div>
+            <div class="force-quick-card" id="btnMonitor">
+                <div class="force-quick-icon">📊</div>
+                <div class="force-quick-title">실시간 모니터링</div>
+                <div class="force-quick-desc">SOC, 전압, 전류, 온도 데이터를 확인합니다.</div>
+            </div>
 
-        <div class="service-card" id="btnAlert">
-            <h3>🚨 알림/이상 이력</h3>
-            <p>장비 이상, 경고, 장애 이력을 확인합니다.</p>
-        </div>
+            <div class="force-quick-card" id="btnAlert">
+                <div class="force-quick-icon">🚨</div>
+                <div class="force-quick-title">알림/이상 이력</div>
+                <div class="force-quick-desc">이상 경고와 장애 발생 이력을 확인합니다.</div>
+            </div>
 
-        <div class="service-card" id="btnEnergy">
-            <h3>⚡ 에너지 분석</h3>
-            <p>충전량, 방전량, 사용량을 분석합니다.</p>
-        </div>
-
-        <div class="service-card" id="btnBoard">
-            <h3>💬 문의게시판</h3>
-            <p>문의 및 유지보수 요청을 작성합니다.</p>
-        </div>
-
-        <div class="service-card" id="btnMyPage">
-            <h3>👤 마이페이지</h3>
-            <p>회원 정보와 등록 장비를 관리합니다.</p>
-        </div>
-
-        <div class="service-card" id="btnGuide">
-            <h3>📘 이용 가이드</h3>
-            <p>ESS-M.S 사용 방법을 확인합니다.</p>
+            <div class="force-quick-card" id="btnMyPage">
+                <div class="force-quick-icon">👤</div>
+                <div class="force-quick-title">마이페이지</div>
+                <div class="force-quick-desc">회원 정보와 등록 장비를 관리합니다.</div>
+            </div>
         </div>
     </div>
+
 </section>
 
 <div class="container">
