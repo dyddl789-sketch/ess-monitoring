@@ -62,6 +62,21 @@
 		 where device_id = #{device_id}
 		   and member_id = #{member_id}
 	</delete>
+	
+	<!-- 기기 상세 조회 -->
+	<select id="deviceDetail" resultType="com.lgy.ess_monitoring.dto.EssDeviceDTO">
+	    select
+	        device_id,
+	        member_id,
+	        device_name,
+	        location,
+	        capacity_kw,
+	        device_type,
+	        status,
+	        install_date
+	    from ess_device
+	    where device_id = #{param1}
+	</select>
 
 </mapper>
 

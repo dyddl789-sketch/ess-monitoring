@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -111,4 +112,57 @@ public class EssDeviceController {
 	        return "fail";
 	    }
 	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/device_detail_ajax", produces = "application/json; charset=UTF-8")
+	public String deviceDetailAjax(@RequestParam("device_id") int device_id, HttpSession session) {
+		log.info("@# deviceDetailAjax()");
+	    log.info("@# device_id => " + device_id);
+
+	    Integer member_id = (Integer) session.getAttribute("member_id");
+	    log.info("@# session member_id => " + member_id);
+
+	    if (member_id == null) {
+	        log.info("@# 로그인 정보 없음");
+	        return "{}";
+	    }
+
+	    EssDeviceDTO dto = deviceService.deviceDetail(device_id);
+
+	    log.info("@# device detail dto => " + dto);
+
+	    ObjectMapper mapper = new ObjectMapper();
+
+	    String json = "";
+
+	    try {
+	        json = mapper.writeValueAsString(dto);
+	    } catch (Exception e) {
+	        log.error("@# device detail json 변환 오류 => " + e.getMessage());
+	        json = "{}";
+	    }
+
+	    log.info("@# device detail json => " + json);
+
+	    return json;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

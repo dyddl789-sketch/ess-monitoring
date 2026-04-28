@@ -400,6 +400,7 @@ function ajaxLoad(url, fallbackTitle, fallbackHtml) {
     });
 }
 
+// 기기 등록
 function loadRegister() {
 	renderTemp(
     		"🔧 ESS 기기 등록",
@@ -569,12 +570,12 @@ function loadDeviceList() {
             html += "<th>번호</th>";
             html += "<th>기기명</th>";
             html += "<th>위치</th>";
-            html += "<th>용량</th>";
-            html += "<th>종류</th>";
-            html += "<th>상태</th>";
-            html += "<th>설치일</th>";
+//             html += "<th>용량</th>";
+//             html += "<th>종류</th>";
+//             html += "<th>상태</th>";
+//             html += "<th>설치일</th>";
             html += "<th>관리</th>";
-            html += "<td>";
+            html += "</tr>";
 			
             
             
@@ -598,14 +599,18 @@ function loadDeviceList() {
                     html += "<td>" + device.device_id + "</td>";
                     html += "<td>" + device.device_name + "</td>";
                     html += "<td>" + device.location + "</td>";
-                    html += "<td>" + device.capacity_kw + " kW</td>";
-                    html += "<td>" + device.device_type + "</td>";
-                    html += "<td><span class='badge " + badgeClass + "'>" + device.status + "</span></td>";
-                    html += "<td>" + device.install_date + "</td>";
+//                     html += "<td>" + device.capacity_kw + " kW</td>";
+//                     html += "<td>" + device.device_type + "</td>";
+//                     html += "<td><span class='badge " + badgeClass + "'>" + device.status + "</span></td>";
+//                     html += "<td>" + device.install_date + "</td>";
                     html += "<td>";
                     // 삭제 버튼
                     // 클릭하면 JavaScript deleteDevice() 함수로 device_id를 넘긴다.
                     html += "<button type='button' onclick='deleteDevice(" + device.device_id + ")'>삭제</button>";
+                    //상세보기 버튼
+                    // 클릭하면 JavaScript loadDeviceDetail() 함수로 device_id를 넘긴다.
+
+                    html += "<button type='button' onclick='detailDevice(" + device.device_id + ")'>상세보기</button>";
                     html += "</td>";
                     html += "</tr>";
                 }
@@ -723,6 +728,123 @@ function deleteDevice(device_id) {
         }
     });
 }
+
+
+//목록에서 상세보기 클릭 시 작동 
+function detailDevice(device_id){
+	console.log("@# detailDevice()");
+	console.log("@# device_id"+device_id);
+	
+	$.ajax({
+		
+		// 컨트롤러의 Ajax 상세조회 주소
+		url : ctx + "/device_detail_ajax",
+		// 상세조회는 데이터를 가져오는 것이므로 get 사용
+        type: "get",
+        // 서버로 보낼 데이터, Controller에서 @RequestParam("device_id")로 받는다.
+        data: {
+            device_id: device_id
+        },
+     	// 서버에서 JSON 형태로 응답받는다.
+        dataType: "json",
+     	// Ajax 요청 성공 시 실행
+        // device에는 서버가 보내준 기기 상세정보 1건이 들어온다.
+        success: function(device) {
+            console.log("@# device detail =>", device);
+
+            // 조회 결과가 없을 경우
+            if (device == null) {
+                renderTemp(
+                    "🗂 기기 상세",
+                    "<p>기기 상세 정보를 찾을 수 없습니다.</p>"
+                );
+                return;
+            }
+        // 화면에 출력할 html 문자열 생성
+        var html = "";
+        html += "<p>선택한 ESS 장비의 상세 정보를 확인합니다.</p>";
+
+        html += "<table class='fake-table'>";
+
+        // 테이블 제목 행
+        html += "<tr>";
+        html += "<th>항목</th>";
+        html += "<th>내용</th>";
+        html += "</tr>";
+
+        // 기기 번호
+        html += "<tr>";
+        html += "<td>기기 번호</td>";
+        html += "<td>" + device.device_id + "</td>";
+        html += "</tr>";
+
+        // 기기명
+        html += "<tr>";
+        html += "<td>기기명</td>";
+        html += "<td>" + device.device_name + "</td>";
+        html += "</tr>";
+
+        // 위치
+        html += "<tr>";
+        html += "<td>위치</td>";
+        html += "<td>" + device.location + "</td>";
+        html += "</tr>";
+
+        // 용량
+        html += "<tr>";
+        html += "<td>용량</td>";
+        html += "<td>" + device.capacity_kw + " kW</td>";
+        html += "</tr>";
+
+        // 종류
+        html += "<tr>";
+        html += "<td>종류</td>";
+        html += "<td>" + device.device_type + "</td>";
+        html += "</tr>";
+
+        // 상태
+        html += "<tr>";
+        html += "<td>상태</td>";
+        html += "<td>" + device.status + "</span></td>";
+        html += "</tr>";
+
+        // 설치일
+        html += "<tr>";
+        html += "<td>설치일</td>";
+        html += "<td>" + device.install_date + "</td>";
+        html += "</tr>";
+
+        html += "</table>";
+
+        // 버튼 영역
+        html += "<div style='margin-top: 15px;'>";
+
+        // 다시 Ajax로 기기 목록을 불러온다.
+        html += "<button type='button' onclick='loadDeviceList()'>목록으로</button> ";
+
+        // 다음 단계에서 만들 실시간 모니터링 상세 함수
+		html += "<button type='button' onclick='loadMonitoringDetail(" + device.device_id + ")'>실시간 모니터링 보기</button>";
+        html += "</div>";
+
+        // renderTemp()를 이용해서 메인 화면의 내용 영역을 교체한다.
+        renderTemp("🗂 기기 상세", html);
+    },
+
+    // Ajax 요청 실패 시 실행
+    error: function(xhr, status, error) {
+        console.log("@# xhr =>", xhr);
+        console.log("@# status =>", status);
+        console.log("@# error =>", error);
+
+        renderTemp(
+            "🗂 기기 상세",
+            "<p>기기 상세 정보를 불러오는 중 오류가 발생했습니다.</p>"
+        );
+    }
+  });
+}
+
+
 
 function loadMonitor() {
     ajaxLoad(

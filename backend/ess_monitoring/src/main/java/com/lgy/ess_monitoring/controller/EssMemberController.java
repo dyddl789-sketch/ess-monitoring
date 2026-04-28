@@ -37,6 +37,8 @@ public class EssMemberController {
     @RequestMapping("/main")
     public String main(HttpSession session, Model model) {
     	
+    	log.info("@# main");
+    	
     	String address = (String) session.getAttribute("member_address");
         log.info("@# main memberAddress => " + address);
         
@@ -70,6 +72,7 @@ public class EssMemberController {
 
         // JSP에서 제목 표시 등에 사용할 수 있게 주소도 전달
         model.addAttribute("address", address);
+        log.info("@# main return 직전");
         return "main";
     }
 
