@@ -51,10 +51,12 @@ function ajaxLoad(url, fallbackTitle, fallbackHtml) {
     });
 }
 
+// 기기 등록
 function loadRegister() {
     renderTemp(
         "🔧 ESS 기기 등록",
         "<form id='deviceForm'>" +
+
         "<table class='fake-table'>" +
 
         "<tr>" +
@@ -120,9 +122,21 @@ function loadRegister() {
 }
 
 function fn_device_register() {
+    console.log("@# fn_device_register() 실행");
+
     const deviceName = $("#device_name").val();
+    const location = $("#location").val();
     const capacityKw = $("#capacity_kw").val();
     const deviceType = $("#device_type").val();
+    const status = $("#status").val();
+    const installDate = $("#install_date").val();
+
+    console.log("@# device_name =>", deviceName);
+    console.log("@# location =>", location);
+    console.log("@# capacity_kw =>", capacityKw);
+    console.log("@# device_type =>", deviceType);
+    console.log("@# status =>", status);
+    console.log("@# install_date =>", installDate);
 
     if (deviceName === "") {
         alert("기기 이름을 입력하세요.");
@@ -144,11 +158,15 @@ function fn_device_register() {
 
     const formData = $("#deviceForm").serialize();
 
+    console.log("@# formData =>", formData);
+
     $.ajax({
         type: "post",
         url: ctx + "/device_register_ajax",
         data: formData,
         success: function(result) {
+            console.log("@# result =>", result);
+
             if (result === "success") {
                 alert("기기 등록이 완료되었습니다.");
 
@@ -163,6 +181,7 @@ function fn_device_register() {
 
                 $("#deviceCount").text((count + 1) + "대");
 
+                // 등록 후 바로 기기 목록으로 이동
                 loadDeviceList();
 
             } else if (result === "login_required") {
@@ -183,11 +202,15 @@ function fn_device_register() {
 }
 
 function loadDeviceList() {
+    console.log("@# loadDeviceList() 실행");
+
     $.ajax({
         url: ctx + "/device_list_ajax",
         type: "get",
         dataType: "json",
         success: function(list) {
+            console.log("@# device list =>", list);
+
             let html = "";
 
             html += "<p>등록된 ESS 장비를 확인하는 영역입니다.</p>";
@@ -207,6 +230,14 @@ function loadDeviceList() {
             } else {
                 for (let i = 0; i < list.length; i++) {
                     const device = list[i];
+
+                    let badgeClass = "green";
+
+                    if (device.status === "점검") {
+                        badgeClass = "yellow";
+                    } else if (device.status === "오류") {
+                        badgeClass = "red";
+                    }
 
                     html += "<tr>";
                     html += "<td>" + device.device_id + "</td>";
@@ -237,7 +268,11 @@ function loadDeviceList() {
     });
 }
 
+// 기기 삭제
 function deleteDevice(device_id) {
+    console.log("@# deleteDevice() 실행");
+    console.log("@# device_id =>", device_id);
+
     if (!confirm("해당 기기를 삭제하시겠습니까?")) {
         return;
     }
@@ -249,6 +284,8 @@ function deleteDevice(device_id) {
             device_id: device_id
         },
         success: function(result) {
+            console.log("@# delete result =>", result);
+
             if (result === "success") {
                 alert("기기가 삭제되었습니다.");
 
@@ -286,7 +323,11 @@ function deleteDevice(device_id) {
     });
 }
 
+// 목록에서 상세보기 클릭 시 작동
 function detailDevice(device_id) {
+    console.log("@# detailDevice()");
+    console.log("@# device_id =>", device_id);
+
     $.ajax({
         url: ctx + "/device_detail_ajax",
         type: "get",
@@ -295,6 +336,8 @@ function detailDevice(device_id) {
         },
         dataType: "json",
         success: function(device) {
+            console.log("@# device detail =>", device);
+
             if (device == null) {
                 renderTemp(
                     "🗂 기기 상세",
