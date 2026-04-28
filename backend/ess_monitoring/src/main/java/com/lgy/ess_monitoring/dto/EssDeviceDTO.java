@@ -1,5 +1,7 @@
 package com.lgy.ess_monitoring.dto;
 
+import java.math.BigDecimal;
+
 import lombok.Data;
 
 @Data
@@ -18,5 +20,8 @@ public class EssDeviceDTO {
     private String device_type;     // 장비 종류
     private String status;          // 현재 상태
     private String install_date;    // 설치 날짜
-	
+    private BigDecimal latitude;  //주소 변환 결과 위도
+    private BigDecimal longitude; //주소 변환 결과 경도
+    private Integer nx;  //기상청 API용 격자 X
+    private Integer ny;	//기상청 API용 격자 Y
 }
