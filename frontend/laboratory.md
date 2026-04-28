@@ -6,3 +6,6 @@
 <pr>
 사이버 펑크 스타일
 <img width="895" height="892" alt="Image" src="https://github.com/user-attachments/assets/05b564f4-2ec3-437a-8d7b-509786ce2387" />
+
+글래스 모피즘(아이폰, 윈드우 계열 스타일)
+<img width="1158" height="876" alt="Image" src="https://github.com/user-attachments/assets/e36fc47f-e9d4-4e42-bb83-2e9ef164c417" />
