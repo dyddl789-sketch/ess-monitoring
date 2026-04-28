@@ -47,5 +47,18 @@ public class EssDeviceServiceImpl implements EssDeviceService{
 		
 		return result;
 	}
+
+	@Override
+	public EssDeviceDTO deviceDetail(int device_id) {
+		EssDeviceDAO dao = sqlSession.getMapper(EssDeviceDAO.class);
+		EssDeviceDTO dto = dao.deviceDetail(device_id);
+		
+		return dto;
+	}
 	
 }
+
+
+
+
+

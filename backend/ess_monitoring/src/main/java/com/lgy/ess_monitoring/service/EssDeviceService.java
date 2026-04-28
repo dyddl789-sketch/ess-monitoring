@@ -19,4 +19,7 @@ public interface EssDeviceService {
 	    
 	    //기기 삭제
 	    public int deleteDevice(@Param("device_id")int device_id, @Param("member_id")int member_id);
+	    
+	    //상세 보기
+	    public EssDeviceDTO deviceDetail(int device_id);	    
 }
