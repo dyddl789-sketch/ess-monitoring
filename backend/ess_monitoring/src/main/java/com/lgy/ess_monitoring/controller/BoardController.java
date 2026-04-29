@@ -1,5 +1,6 @@
 package com.lgy.ess_monitoring.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.lgy.ess_monitoring.dto.BoardCommentDTO;
 import com.lgy.ess_monitoring.dto.BoardDTO;
 import com.lgy.ess_monitoring.dto.Criteria;
 import com.lgy.ess_monitoring.dto.PageDTO;
+import com.lgy.ess_monitoring.service.BoardCommentService;
 import com.lgy.ess_monitoring.service.BoardService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +29,8 @@ public class BoardController {
 	@Autowired
 	private BoardService service;
 	
+	@Autowired
+	private BoardCommentService commentService;
 	@RequestMapping("/board_list")
 	public String list(Criteria cri, Model model) {
 		log.info("@# board_list()");
@@ -90,12 +95,23 @@ public class BoardController {
 		BoardDTO dto = service.contentView(param);
 	    log.info("@# dto => " + dto);
 	    
-	 // 현재 로그인한 회원의 member_id를 세션에서 꺼냄
+	    // 현재 로그인한 회원의 member_id를 세션에서 꺼냄
 	    // 로그인할 때 session.setAttribute("member_id", dto.getMember_id())가 되어 있어야 함
 	    Integer loginMemberId = (Integer) session.getAttribute("member_id");
 	    
 	    //로그인 회원번호 확인
 	    log.info("@# loginMemberId=>"+ loginMemberId);
+	    
+	    // 현재 로그인한 회원 유형을 세션에서 꺼냄
+	    // 관리자 댓글 작성 폼을 JSP에서 보여줄지 판단하기 위해 사용
+	    String user_type = (String) session.getAttribute("user_type");
+	    model.addAttribute("user_type", user_type);
+	    log.info("@# user_type => " + user_type);
+	    
+	    // 현재 게시글 번호를 기준으로 관리자 답변 댓글 목록 조회
+	    // board_comment 테이블에서 board_no가 현재 게시글 번호와 같은 댓글만 가져옴
+	    ArrayList<BoardCommentDTO> commentList = commentService.getCommentList(boardNo);
+	    log.info("@# commentList size => " + commentList.size());
 	    
 	    //jsp에서 ${content_view.필드명}으로 사용할 게시글 상세 정보 전달
 		model.addAttribute("content_view", dto);
@@ -105,6 +121,12 @@ public class BoardController {
 		
 		// JSP에서 현재 로그인한 회원번호와 작성자 회원번호를 비교하기 위해 전달
 		model.addAttribute("loginMemberId",loginMemberId);
+		
+		// JSP에서 ${commentList}로 관리자 답변 목록을 출력하기 위해 전달
+	    model.addAttribute("commentList", commentList);
+
+	    // JSP에서 ${user_type}으로 관리자 여부를 판단하기 위해 전달
+	    model.addAttribute("user_type", user_type);
 		
 		return "board_content_view";
 	}
