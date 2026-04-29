@@ -220,12 +220,13 @@ function loadDeviceList() {
             html += "<th>번호</th>";
             html += "<th>기기명</th>";
             html += "<th>위치</th>";
+            html += "<th>대표</th>";
             html += "<th>관리</th>";
             html += "</tr>";
 
             if (list == null || list.length === 0) {
                 html += "<tr>";
-                html += "<td colspan='4'>등록된 기기가 없습니다.</td>";
+                html += "<td colspan='5'>등록된 기기가 없습니다.</td>";
                 html += "</tr>";
             } else {
                 for (let i = 0; i < list.length; i++) {
@@ -240,14 +241,28 @@ function loadDeviceList() {
                     }
 
                     html += "<tr>";
-                    html += "<td>" + device.device_id + "</td>";
-                    html += "<td>" + device.device_name + "</td>";
-                    html += "<td>" + device.location + "</td>";
-                    html += "<td>";
-                    html += "<button type='button' onclick='deleteDevice(" + device.device_id + ")'>삭제</button> ";
-                    html += "<button type='button' onclick='detailDevice(" + device.device_id + ")'>상세보기</button>";
-                    html += "</td>";
-                    html += "</tr>";
+					html += "<td>" + device.device_id + "</td>";
+					html += "<td>" + device.device_name + "</td>";
+					html += "<td>" + device.location + "</td>";
+					
+					// 대표 디바이스 설정 영역
+					html += "<td>";
+					
+					if (device.is_main === "Y") {
+					    html += "<span class='main-device-badge'>대표 디바이스</span>";
+					} else {
+					    html += "<button type='button' onclick='setMainDevice(" + device.device_id + ")'>대표 설정</button>";
+					}
+					
+					html += "</td>";
+					
+					// 관리 버튼 영역
+					html += "<td>";
+					html += "<button type='button' onclick='deleteDevice(" + device.device_id + ")'>삭제</button> ";
+					html += "<button type='button' onclick='detailDevice(" + device.device_id + ")'>상세보기</button>";
+					html += "</td>";
+					
+					html += "</tr>";
                 }
             }
 
@@ -268,6 +283,52 @@ function loadDeviceList() {
     });
 }
 
+
+// 대표 디바이스 설정
+function setMainDevice(device_id) {
+    console.log("@# setMainDevice() 실행");
+    console.log("@# device_id =>", device_id);
+
+    if (!confirm("이 디바이스를 대표 디바이스로 설정하시겠습니까?")) {
+        return;
+    }
+
+    $.ajax({
+        url: ctx + "/set_main_device",
+        type: "post",
+        data: {
+            device_id: device_id
+        },
+        success: function(result) {
+            console.log("@# setMainDevice result =>", result);
+
+            if (result === "success") {
+                alert("대표 디바이스가 설정되었습니다.");
+
+                // 목록 다시 조회해서 대표 표시 갱신
+                loadDeviceList();
+
+                // 메인 상단 날씨 기준도 바로 바꾸려면 새로고침
+                location.reload();
+
+            } else if (result === "login_required") {
+                alert("로그인이 필요합니다.");
+                location.href = ctx + "/login_view";
+
+            } else {
+                alert("대표 디바이스 설정에 실패했습니다.");
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log("@# xhr.status =>", xhr.status);
+            console.log("@# xhr.responseText =>", xhr.responseText);
+            console.log("@# status =>", status);
+            console.log("@# error =>", error);
+
+            alert("대표 디바이스 설정 중 서버 오류가 발생했습니다.");
+        }
+    });
+}
 // 기기 삭제
 function deleteDevice(device_id) {
     console.log("@# deleteDevice() 실행");

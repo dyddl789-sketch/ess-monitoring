@@ -21,5 +21,12 @@ public interface EssDeviceService {
 	    public int deleteDevice(@Param("device_id")int device_id, @Param("member_id")int member_id);
 	    
 	    //상세 보기
-	    public EssDeviceDTO deviceDetail(int device_id);	    
+	    public EssDeviceDTO deviceDetail(int device_id);
+	    
+
+	    // 선택한 디바이스를 대표 디바이스로 설정
+	    public void setMainDevice(int member_id, int device_id);
+
+	    // 회원의 대표 디바이스 조회
+	    public EssDeviceDTO getMainDevice(int member_id);
 }

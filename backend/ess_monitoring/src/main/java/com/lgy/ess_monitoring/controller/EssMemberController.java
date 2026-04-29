@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.lgy.ess_monitoring.dto.EssDeviceDTO;
 import com.lgy.ess_monitoring.dto.EssMemberDTO;
 import com.lgy.ess_monitoring.dto.WeatherDTO;
 import com.lgy.ess_monitoring.service.EssDeviceService;
@@ -39,22 +40,69 @@ public class EssMemberController {
     	
     	log.info("@# main");
     	
-    	String address = (String) session.getAttribute("member_address");
-        log.info("@# main memberAddress => " + address);
+    	// 1. 세션에서 회원 정보 가져오기
+    	String memberAddress = (String) session.getAttribute("member_address");
+        log.info("@# main memberAddress => " + memberAddress);
         
         Integer member_id = (Integer)session.getAttribute("member_id");
         log.info("@# member_id => " + member_id);
         
+        //날씨 조회 기준 위치
+        String weatherAddress = memberAddress;
+        
+        // 날씨 기준 표시용
+        String weatherBaseType = "회원 주소";
+
+        // 대표 디바이스 정보 JSP 전달용
+        EssDeviceDTO mainDevice = null;
+        
+        // 2. 로그인 상태일 때
         if (member_id != null) {
+
+            // 2-1. 기기 개수 조회
             int deviceCount = deviceService.getDeviceCount(member_id);
             log.info("@# deviceCount => " + deviceCount);
             model.addAttribute("deviceCount", deviceCount);
-        }else {
+
+            // 2-2. 대표 디바이스 조회
+            mainDevice = deviceService.getMainDevice(member_id);
+            log.info("@# mainDevice => " + mainDevice);
+
+            // 2-3. 대표 디바이스가 있고 location도 있으면 디바이스 위치 기준
+            if (mainDevice != null
+                    && mainDevice.getLocation() != null
+                    && !mainDevice.getLocation().trim().equals("")) {
+
+                weatherAddress = mainDevice.getLocation();
+                weatherBaseType = "대표 디바이스 위치";
+
+                log.info("@# 날씨 기준 => 대표 디바이스 위치");
+                log.info("@# 대표 디바이스명 => " + mainDevice.getDevice_name());
+                log.info("@# 대표 디바이스 위치 => " + weatherAddress);
+
+            } else {
+                // 대표 디바이스가 없으면 회원 주소 기준
+                weatherAddress = memberAddress;
+                weatherBaseType = "회원 주소";
+
+                log.info("@# 대표 디바이스 없음 또는 위치 없음");
+                log.info("@# 날씨 기준 => 회원 주소");
+                log.info("@# 회원 주소 => " + weatherAddress);
+            }
+
+        } else {
+            // 3. 비로그인 상태
             model.addAttribute("deviceCount", 0);
-		}
+
+            weatherAddress = memberAddress;
+            weatherBaseType = "회원 주소";
+
+            log.info("@# 비로그인 상태");
+        }
+		
         
-        //회원 주소 기준 날씨 api 호출
-        List<WeatherDTO> weatherList = weatherService.forecastByAddress(address);
+        // 대표 디바이스 위치 또는 회원 주소 기준 날씨 api 호출
+        List<WeatherDTO> weatherList = weatherService.forecastByAddress(weatherAddress);
 
         // API 오류 등으로 null이 올 경우를 대비한 방어 코드
         if (weatherList == null) {
@@ -71,8 +119,18 @@ public class EssMemberController {
         model.addAttribute("weatherList", weatherList);
 
         // JSP에서 제목 표시 등에 사용할 수 있게 주소도 전달
-        model.addAttribute("address", address);
+        model.addAttribute("address", weatherAddress);
+
+        // 날씨 기준 표시용: 회원 주소 / 대표 디바이스 위치
+        model.addAttribute("weatherBaseType", weatherBaseType);
+
+        // 대표 디바이스 정보 표시용
+        model.addAttribute("mainDevice", mainDevice);
+
+        log.info("@# weatherAddress => " + weatherAddress);
+        log.info("@# weatherBaseType => " + weatherBaseType);
         log.info("@# main return 직전");
+        
         return "main";
     }
 

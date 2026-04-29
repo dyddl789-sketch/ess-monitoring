@@ -22,4 +22,13 @@ public interface EssDeviceDAO {
     
     //상세 보기
     public EssDeviceDTO deviceDetail(int device_id);
+    
+    // 기존 대표 디바이스 해제
+    public void clearMainDevice(int member_id);
+
+    // 선택한 디바이스를 대표 디바이스로 설정
+    public void setMainDevice(EssDeviceDTO dto);
+
+    // 회원의 대표 디바이스 조회
+    public EssDeviceDTO getMainDevice(int member_id);
 }
