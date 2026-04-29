@@ -9,7 +9,8 @@
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=4c85272f51538d1512f6a5f19d0c8e2a&libraries=services"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <style>
 /* ========================= */
 /* 기본 설정 */
@@ -592,11 +593,11 @@ button {
         </p>
 
         <div class="hero-buttons">
-            <button type="button" class="hero-btn" onclick="checkLogin(loadRegister)">
+            <button type="button" class="hero-btn" onclick="checkLogin(function(){ moveView('register', loadRegister); })">
                 기기 등록
             </button>
 
-            <button type="button" class="hero-btn secondary" onclick="checkLogin(loadDeviceList)">
+            <button type="button" class="hero-btn secondary" onclick="checkLogin(function(){ moveView('deviceList', loadDeviceList); })">
                 등록 기기 보기
             </button>
         </div>
@@ -781,34 +782,64 @@ button {
 
 <div class="container">
     <div id="contentArea">
-        <div class="panel-title">
-            <h3>ESS-M.S 작업 영역</h3>
-        </div>
-        <p>위 메뉴를 선택하면 이 영역만 변경됩니다.</p>
 
-        <table class="fake-table">
-            <tr>
-                <th>구분</th>
-                <th>설명</th>
-                <th>상태</th>
-            </tr>
-            <tr>
-                <td>기기 등록</td>
-                <td>ESS 장비 등록 및 그룹 연결</td>
-                <td><span class="badge yellow">로그인 필요</span></td>
-            </tr>
-            <tr>
-                <td>모니터링</td>
-                <td>실시간 센서 데이터 확인</td>
-                <td><span class="badge green">준비됨</span></td>
-            </tr>
-            <tr>
-                <td>알림</td>
-                <td>이상 상태 및 장애 이력 확인</td>
-                <td><span class="badge green">준비됨</span></td>
-            </tr>
-        </table>
+    <div class="panel-title">
+        <h3>ESS 운영 대시보드</h3>
     </div>
+
+    <!-- 상태 요약 -->
+    <div style="display:flex; gap:15px; margin-top:15px;">
+
+        <div class="summary-card">
+            <h4>등록 기기</h4>
+            <strong>${deviceCount}대</strong>
+            <p>현재 등록된 ESS 장비 수</p>
+        </div>
+
+        <div class="summary-card">
+            <h4>운영 상태</h4>
+            <strong class="status-normal">정상</strong>
+            <p>대표 기기 기준</p>
+        </div>
+
+        <div class="summary-card">
+            <h4>평균 SOC</h4>
+            <strong>--%</strong>
+            <p>모니터링 연동 예정</p>
+        </div>
+
+        <div class="summary-card">
+            <h4>날씨 영향</h4>
+            <strong class="status-warning">보통</strong>
+            <p>기상청 데이터 기준</p>
+        </div>
+
+    </div>
+
+    <!-- 빠른 실행 -->
+    <div style="margin-top:30px;">
+        <h4>🚀 바로 시작하기</h4>
+
+        <div style="display:flex; gap:10px; margin-top:10px;">
+
+            <button onclick="loadDeviceList()">기기 목록 보기</button>
+            <button onclick="loadMonitor()">실시간 모니터링</button>
+            <button onclick="loadAlert()">알림 확인</button>
+
+        </div>
+    </div>
+
+    <!-- 상태 메시지 -->
+    <div style="margin-top:30px;">
+        <h4>💡 현재 상태</h4>
+
+        <p style="color:#475569;">
+            현재 ESS 장비 상태는 전반적으로 안정적입니다.<br>
+            일부 기기의 SOC 및 날씨 조건을 확인해 주세요.
+        </p>
+    </div>
+
+</div>
 </div>
 
 <script src="${pageContext.request.contextPath}/resources/js/main.js"></script>

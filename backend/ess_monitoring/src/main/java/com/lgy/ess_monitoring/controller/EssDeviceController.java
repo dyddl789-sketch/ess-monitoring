@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,156 +14,146 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lgy.ess_monitoring.dto.EssDeviceDTO;
+import com.lgy.ess_monitoring.dto.EssMonitoringDTO;
 import com.lgy.ess_monitoring.service.EssDeviceService;
+import com.lgy.ess_monitoring.service.EssMonitoringService;
+import com.lgy.ess_monitoring.dto.WeatherDataDTO;
+import com.lgy.ess_monitoring.service.WeatherDataService;
+
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
+@RequestMapping("/device") // ⭐ 여기 중요
 public class EssDeviceController {
-	
-	@Autowired
-	private EssDeviceService deviceService;
-	
-	// 기기 등록
-	@RequestMapping(value = "/device_register_ajax", method = RequestMethod.POST)
-	@ResponseBody
-	public String deviceRegister(EssDeviceDTO deviceDTO, HttpSession session) {
-		log.info("@# deviceRegister()");
-        log.info("@# 화면에서 넘어온 deviceDTO => " + deviceDTO);
-        
-        Integer member_id = (Integer)session.getAttribute("member_id");
-        log.info("@# session member_id => " + member_id);
+
+    @Autowired
+    private EssDeviceService deviceService;
+
+    @Autowired
+    private EssMonitoringService monitoringService;
+    
+    @Autowired
+    private WeatherDataService weatherDataService;
+    
+    // ===============================
+    // 1. 등록 페이지 이동
+    // ===============================
+    @RequestMapping("/registerForm")
+    public String registerForm() {
+        return "device/registerForm";
+    }
+
+    // ===============================
+    // 2. 기기 등록
+    // ===============================
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @ResponseBody
+    public String deviceRegister(EssDeviceDTO deviceDTO, HttpSession session) {
+
+        log.info("@# deviceRegister()");
+        log.info("@# deviceDTO => {}", deviceDTO);
+
+        Integer member_id = (Integer) session.getAttribute("member_id");
 
         if (member_id == null) {
-			log.info("@# 로그인 X");
-			return "login_view";
-		}
-        
-        // 회원 ID는 화면에서 받지 않고 세션에서 넣는다.
-        deviceDTO.setMember_id(member_id);
-        
-        // 개인 회원이면 group_id는 null로 들어가도 됨
-        // 기업/그룹 기능을 아직 안 만들었다면 화면에서 group_id를 받지 않아도 됨
+            return "login_view";
+        }
 
-        // 상태값이 비어 있으면 기본값 정상으로 세팅
+        deviceDTO.setMember_id(member_id);
+
         if (deviceDTO.getStatus() == null || deviceDTO.getStatus().equals("")) {
             deviceDTO.setStatus("정상");
         }
 
-        log.info("@# 저장 직전 deviceDTO => " + deviceDTO);
-
         deviceService.inseretDevice(deviceDTO);
 
-        log.info("@# 기기 등록 완료");
-
         return "success";
-	}
-	
-	@RequestMapping(value = "/device_list_ajax",
-					method = RequestMethod.GET,
-					produces = "application/json; charset=UTF-8"
-					)
-	@ResponseBody
-	public String deviceList(HttpSession session) throws Exception {
-	    log.info("@# deviceList()");
+    }
 
-	    Integer member_id = (Integer) session.getAttribute("member_id");
-	    log.info("@# session member_id => " + member_id);
+    // ===============================
+    // 3. 기기 목록 (Ajax)
+    // ===============================
+    @RequestMapping(value = "/listAjax", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+    @ResponseBody
+    public String deviceList(HttpSession session) throws Exception {
 
-	    ArrayList<EssDeviceDTO> deviceList = new ArrayList<EssDeviceDTO>();
+        log.info("@# deviceList()");
 
-	    if (member_id == null) {
-	        log.info("@# 로그인 세션 없음");
-	    } else {
-	        deviceList = deviceService.getDeviceList(member_id);
-	    }
+        Integer member_id = (Integer) session.getAttribute("member_id");
 
-	    log.info("@# deviceList size => " + deviceList.size());
+        ArrayList<EssDeviceDTO> deviceList = new ArrayList<>();
 
-	    ObjectMapper mapper = new ObjectMapper();
-	    String json = mapper.writeValueAsString(deviceList);
+        if (member_id != null) {
+            deviceList = deviceService.getDeviceList(member_id);
+        }
 
-	    log.info("@# deviceList json => " + json);
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(deviceList);
+    }
 
-	    return json;
-	}
-	
-	@RequestMapping(value = "/device_delete_ajax", method = RequestMethod.POST)
-	@ResponseBody
-	public String deleteDevice(int device_id, HttpSession session) {
-	    log.info("@# deleteDevice()");
-	    log.info("@# device_id => " + device_id);
+    // ===============================
+    // 4. 기기 삭제
+    // ===============================
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public String deleteDevice(int device_id, HttpSession session) {
 
-	    Integer member_id = (Integer) session.getAttribute("member_id");
-	    log.info("@# session member_id => " + member_id);
+        Integer member_id = (Integer) session.getAttribute("member_id");
 
-	    if (member_id == null) {
-	        log.info("@# 로그인 세션 없음");
-	        return "login_required";
-	    }
+        if (member_id == null) {
+            return "login_required";
+        }
 
-	    int result = deviceService.deleteDevice(device_id, member_id);
+        int result = deviceService.deleteDevice(device_id, member_id);
 
-	    log.info("@# delete result => " + result);
+        return (result == 1) ? "success" : "fail";
+    }
 
-	    if (result == 1) {
-	        return "success";
-	    } else {
-	        return "fail";
-	    }
-	}
-	
-	@ResponseBody
-	@RequestMapping(value = "/device_detail_ajax", produces = "application/json; charset=UTF-8")
-	public String deviceDetailAjax(@RequestParam("device_id") int device_id, HttpSession session) {
-		log.info("@# deviceDetailAjax()");
-	    log.info("@# device_id => " + device_id);
+    // ===============================
+    // 5. 상세 페이지 (핵심)
+    // ===============================
+    @RequestMapping("/detail")
+    public String deviceDetailPage(@RequestParam("device_id") int device_id,
+                                   HttpSession session,
+                                   Model model) {
 
-	    Integer member_id = (Integer) session.getAttribute("member_id");
-	    log.info("@# session member_id => " + member_id);
+        log.info("@# [deviceDetailPage] device_id => {}", device_id);
 
-	    if (member_id == null) {
-	        log.info("@# 로그인 정보 없음");
-	        return "{}";
-	    }
+        Integer member_id = (Integer) session.getAttribute("member_id");
 
-	    EssDeviceDTO dto = deviceService.deviceDetail(device_id);
+        if (member_id == null) {
+            return "redirect:/login_view";
+        }
 
-	    log.info("@# device detail dto => " + dto);
+        EssDeviceDTO device = deviceService.deviceDetail(device_id);
+        EssMonitoringDTO monitor = monitoringService.getLatestMonitoring(device_id);
+        WeatherDataDTO weather = weatherDataService.getLatestWeather(device_id);
 
-	    ObjectMapper mapper = new ObjectMapper();
+        log.info("@# device => {}", device);
+        log.info("@# monitor => {}", monitor);
+        log.info("@# weather => {}", weather);
 
-	    String json = "";
+        model.addAttribute("device", device);
+        model.addAttribute("monitor", monitor);
+        model.addAttribute("weather", weather);
 
-	    try {
-	        json = mapper.writeValueAsString(dto);
-	    } catch (Exception e) {
-	        log.error("@# device detail json 변환 오류 => " + e.getMessage());
-	        json = "{}";
-	    }
+        return "device/deviceDetail";
+    }
 
-	    log.info("@# device detail json => " + json);
+    // ===============================
+    // 6. 상세 Ajax (필요시 유지)
+    // ===============================
+    @RequestMapping(value = "/detailAjax", produces = "application/json; charset=UTF-8")
+    @ResponseBody
+    public String deviceDetailAjax(@RequestParam("device_id") int device_id) throws Exception {
 
-	    return json;
-	}
+        EssDeviceDTO dto = deviceService.deviceDetail(device_id);
+
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(dto);
+    }
+    
+    
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

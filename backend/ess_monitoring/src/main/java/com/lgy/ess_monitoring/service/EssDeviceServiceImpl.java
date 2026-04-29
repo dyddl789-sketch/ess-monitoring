@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.lgy.ess_monitoring.util.GridConverter;
 
 import com.lgy.ess_monitoring.dao.EssDeviceDAO;
 import com.lgy.ess_monitoring.dto.EssDeviceDTO;
@@ -22,9 +23,28 @@ public class EssDeviceServiceImpl implements EssDeviceService{
 
 	@Override
 	public void inseretDevice(EssDeviceDTO deviceDTO) {
-		EssDeviceDAO dao = sqlSession.getMapper(EssDeviceDAO.class);
-		dao.insertDevice(deviceDTO);
-		
+
+	    if (deviceDTO.getLatitude() != null && deviceDTO.getLongitude() != null) {
+
+	        double lat = deviceDTO.getLatitude().doubleValue();
+	        double lon = deviceDTO.getLongitude().doubleValue();
+
+	        int[] grid = GridConverter.convertToGrid(lat, lon);
+
+	        deviceDTO.setNx(grid[0]);
+	        deviceDTO.setNy(grid[1]);
+
+	        log.info("@# latitude => " + lat);
+	        log.info("@# longitude => " + lon);
+	        log.info("@# nx => " + grid[0]);
+	        log.info("@# ny => " + grid[1]);
+
+	    } else {
+	        log.warn("@# 좌표 없음 → nx/ny 계산 안됨");
+	    }
+
+	    EssDeviceDAO dao = sqlSession.getMapper(EssDeviceDAO.class);
+	    dao.insertDevice(deviceDTO);
 	}
 
 	@Override

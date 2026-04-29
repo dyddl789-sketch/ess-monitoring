@@ -1,0 +1,36 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lgy.ess_monitoring.dao.WeatherDataDAO">
+
+		<select id="getLatestWeather"
+		        parameterType="int"
+		        resultType="com.lgy.ess_monitoring.dto.WeatherDataDTO">
+		
+		    SELECT
+		        weather_id AS weatherId,
+		        device_id AS deviceId,
+		        fcst_date AS fcstDate,
+		        fcst_time AS fcstTime,
+		        sky_status AS skyStatus,
+		        rain_type AS rainType,
+		        rain_prob AS rainProb,
+		        temperature,
+		        humidity,
+		        wind_speed AS windSpeed,
+		        solar_radiation AS solarRadiation,
+		        ess_status AS essStatus,
+		        created_at AS createdAt,
+		        sunrise,
+		        sunset,
+		        base_date AS baseDate,
+		        base_time AS baseTime
+		    FROM weather_data
+		    WHERE device_id = #{device_id}
+		    ORDER BY created_at DESC, fcst_date DESC, fcst_time DESC
+		    LIMIT 1
+		
+		</select>
+
+</mapper>

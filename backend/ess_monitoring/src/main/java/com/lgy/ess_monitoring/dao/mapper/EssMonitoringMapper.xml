@@ -1,70 +1,54 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.lgy.ess_monitoring.dao.EssMonitoringDAO">
 
-<!-- 	<select id="getData" resultType="com.lgy.ess_monitoring.dao.EssMonitoringDAO"> -->
-<!-- 		select ess_id, member_id, device_name, voltage, current_val, soc, status, measured_at -->
-<!--         from ess_monitoring -->
-<!--         where member_id = #{memberId} -->
-<!--         order by measured_at desc -->
-<!-- 	</select> -->
-	
-	<select id="getData" resultType="com.lgy.ess_monitoring.dto.EssMonitoringDTO">
-	    select 
-	        monitor_id,
-	        device_id,
-	        voltage,
-	        current_a,
-	        soc,
-	        power_output,
-	        record_time
-	    from monitoring
-	    where member_id = #{memberId}
-	    order by record_time desc
-	</select>
-	
-	<select id="getDbUser" resultType="string">
-  	 select 'test' as user
-	</select>
+    <select id="getLatestMonitoring"
+            parameterType="int"
+            resultType="com.lgy.ess_monitoring.dto.EssMonitoringDTO">
+        select 
+            monitor_id,
+            device_id,
+            voltage,
+            current_a,
+            soc,
+            power_output,
+            record_time
+        from monitoring
+        where device_id = #{device_id}
+        order by record_time desc
+        limit 1
+    </select>
 
-	<select id="getTotalCount" resultType="int">
-	    select count(*) from monitoring
-	</select>
-	
-		<select id="getMemberCount" parameterType="int" resultType="int">
-		    select count(*) 
-		    from monitoring 
-		    where member_id = #{memberId}
-		</select>
+    <select id="getData" resultType="com.lgy.ess_monitoring.dto.EssMonitoringDTO">
+        select 
+            m.monitor_id,
+            m.device_id,
+            m.voltage,
+            m.current_a,
+            m.soc,
+            m.power_output,
+            m.record_time
+        from monitoring m
+        join ess_device d on m.device_id = d.device_id
+        where d.member_id = #{memberId}
+        order by m.record_time desc
+    </select>
+
+    <select id="getDbUser" resultType="string">
+        select 'test' as user
+    </select>
+
+    <select id="getTotalCount" resultType="int">
+        select count(*) from monitoring
+    </select>
+
+    <select id="getMemberCount" parameterType="int" resultType="int">
+        select count(*)
+        from monitoring m
+        join ess_device d on m.device_id = d.device_id
+        where d.member_id = #{memberId}
+    </select>
 
 </mapper>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
