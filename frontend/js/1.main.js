@@ -8,16 +8,16 @@
         const isLoggedIn = localStorage.getItem('isLoggedIn'); // 로그인 상태 확인
         const authMenu = document.getElementById('auth-menu');
 
-        if (isLoggedIn === 'true') {
+       // authMenu가 이 페이지에 존재하고, 로그인 상태가 true일 때만 실행
+        if (isLoggedIn === 'true' && authMenu) {
             const userName = localStorage.getItem('userName') || '사용자';
-            // 로그인 상태일 때: '님' 표기 및 로그아웃 버튼 표시
             authMenu.innerHTML = `
+                <a href="11.mypage.html" style="margin-right:15px; color:#333; text-decoration:none;">마이페이지</a>
                 <span style="margin-right:15px; color:#333; font-weight:bold;">${userName}님</span>
-                <a href="javascript:void(0)" class="login-btn" style="background:#6c757d;" onclick="handleLogout()">로그아웃</a>
+                <a href="javascript:void(0)" class="login-btn" onclick="handleLogout()">로그아웃</a>
             `;
         }
     }
-
     function handleLogout() {
         if(confirm("로그아웃 하시겠습니까?")) {
             localStorage.removeItem('isLoggedIn');
@@ -26,6 +26,16 @@
             location.reload(); // 페이지 새로고침하여 메뉴 갱신
         }
     }
+
+    function goToMonitoring() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    if (isLoggedIn === 'true') {
+        location.href = '9.monitoring.html'; // 마이페이지(모니터링) 파일명으로 수정
+    } else {
+        alert("로그인이 필요한 서비스입니다.");
+        openLoginWindow();
+    }
+}
 
     // 기존에 만든 로그인 창 열기 함수
     function openLoginWindow() {
