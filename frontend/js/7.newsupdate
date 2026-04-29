@@ -4,14 +4,16 @@
         };
 
         function checkLoginStatus() {
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const isLoggedIn = localStorage.getItem('isLoggedIn'); // 로그인 상태 확인
             const authMenu = document.getElementById('auth-menu');
 
+        // authMenu가 이 페이지에 존재하고, 로그인 상태가 true일 때만 실행
             if (isLoggedIn === 'true' && authMenu) {
                 const userName = localStorage.getItem('userName') || '사용자';
                 authMenu.innerHTML = `
+                    <a href="11.mypage.html" style="margin-right:15px; color:#333; text-decoration:none;">마이페이지</a>
                     <span style="margin-right:15px; color:#333; font-weight:bold;">${userName}님</span>
-                    <a href="javascript:void(0)" class="login-btn" style="background:#6c757d;" onclick="handleLogout()">로그아웃</a>
+                    <a href="javascript:void(0)" class="login-btn" onclick="handleLogout()">로그아웃</a>
                 `;
             }
         }
