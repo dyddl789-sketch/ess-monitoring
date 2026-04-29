@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>내 정보 수정 - ESS-M.S</title>
+    <link rel="stylesheet" href="css/1.main.css">
+    <link rel="stylesheet" href="css/6.signup.css"> 
+    <style>
+        .edit-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .edit-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        .save-btn {
+            flex: 2;
+            padding: 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .cancel-btn {
+            flex: 1;
+            padding: 15px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo" onclick="location.href='1.main.html'" style="cursor:pointer;">ESS-M.S</h1>
+        </div>
+    </header>
+
+    <div class="edit-container">
+        <div class="edit-header">
+            <h2>회원 정보 수정</h2>
+            <p>변경하실 정보를 입력해 주세요.</p>
+        </div>
+
+        <form id="editForm">
+            <div class="form-group">
+                <label>이름</label>
+                <input type="text" id="editName" placeholder="이름을 입력하세요" required>
+            </div>
+            
+            <div class="form-group">
+                <label>이메일</label>
+                <input type="email" id="editEmail" placeholder="example@mail.com">
+            </div>
+
+            <div class="form-group">
+                <label>연락처</label>
+                <input type="tel" id="editPhone" placeholder="010-0000-0000">
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="save-btn">변경사항 저장</button>
+                <a href="11.mypage.html" class="cancel-btn">취소</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="js/12.edit_profile.js"></script>
+</body>
+</html>
