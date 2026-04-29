@@ -55,6 +55,34 @@ public class EssDeviceServiceImpl implements EssDeviceService{
 		
 		return dto;
 	}
+
+	@Override
+	public void setMainDevice(int member_id, int device_id) {
+		log.info("@# setMainDevice()");
+	    log.info("@# member_id => " + member_id);
+	    log.info("@# device_id => " + device_id);
+	    
+		EssDeviceDAO dao = sqlSession.getMapper(EssDeviceDAO.class);
+	    // 1. 기존 대표 디바이스 전체 해제
+	    dao.clearMainDevice(member_id);
+
+	    // 2. 선택한 디바이스를 대표 디바이스로 설정
+	    EssDeviceDTO dto = new EssDeviceDTO();
+	    dto.setMember_id(member_id);
+	    dto.setDevice_id(device_id);
+
+	    dao.setMainDevice(dto);
+	}
+
+	@Override
+	public EssDeviceDTO getMainDevice(int member_id) {
+		log.info("@# getMainDevice()");
+        log.info("@# member_id => " + member_id);
+        
+		EssDeviceDAO dao = sqlSession.getMapper(EssDeviceDAO.class);
+
+        return dao.getMainDevice(member_id);
+	}
 	
 }
 

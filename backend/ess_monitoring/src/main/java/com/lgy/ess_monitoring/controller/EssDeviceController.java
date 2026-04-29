@@ -146,6 +146,29 @@ public class EssDeviceController {
 
 	    return json;
 	}
+	
+	// 대표 디바이스 설정
+	@ResponseBody
+	@RequestMapping("/set_main_device")
+	public String setMainDevice(@RequestParam("device_id") int device_id,
+	                            HttpSession session) {
+
+	    log.info("@# set_main_device()");
+	    log.info("@# device_id => " + device_id);
+
+	    Integer member_id = (Integer) session.getAttribute("member_id");
+	    log.info("@# member_id => " + member_id);
+
+	    // 로그인 안 된 상태
+	    if (member_id == null) {
+	        return "login_required";
+	    }
+
+	    // 대표 디바이스 설정
+	    deviceService.setMainDevice(member_id, device_id);
+
+	    return "success";
+	}
 }
 
 

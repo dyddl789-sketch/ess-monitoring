@@ -735,6 +735,7 @@ button {
                                 <div class="weather-dashboard-icon">${weather.weatherIcon}</div>
                                 <div class="weather-dashboard-status">${weather.skyStatus}</div>
                                 <div class="weather-dashboard-temp">${weather.temperature}</div>
+                                <div class="weather-dashboard-prob">${weather.rainProb}</div>
                             </div>
                         </c:forEach>
                     </c:otherwise>

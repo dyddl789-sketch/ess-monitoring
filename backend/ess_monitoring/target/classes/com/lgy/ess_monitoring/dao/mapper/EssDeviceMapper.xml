@@ -44,9 +44,10 @@
             device_type,
             status,
             install_date
+            is_main
         from ess_device
         where member_id = #{param1}
-        order by device_id desc
+        order by device_id desc, device_id desc
     </select>
 
     <!-- 로그인한 회원의 ESS 기기 수 조회 -->
@@ -76,6 +77,43 @@
 	        install_date
 	    from ess_device
 	    where device_id = #{param1}
+	</select>
+	
+	
+<!-- 0429 디바이스 위치 기준 날씨 조회 추가 파트 -->
+	
+	<!-- 기존 대표 디바이스 해제 -->
+	<update id="clearMainDevice">
+	    update ess_device
+	       set is_main = 'N'
+	     where member_id = #{member_id}
+	</update>
+
+	<!-- 선택한 디바이스를 대표 디바이스로 설정 -->
+	<update id="setMainDevice" parameterType="com.lgy.ess_monitoring.dto.EssDeviceDTO">
+	    update ess_device
+	       set is_main = 'Y'
+	     where device_id = #{device_id}
+	       and member_id = #{member_id}
+	</update>
+	
+	<!-- 회원의 대표 디바이스 조회 -->
+	<select id="getMainDevice"
+	        parameterType="int"
+	        resultType="com.lgy.ess_monitoring.dto.EssDeviceDTO">
+	    select device_id,
+	           member_id,
+	           device_name,
+	           location,
+	           capacity_kw,
+	           device_type,
+	           status,
+	           install_date,
+	           is_main
+	      from ess_device
+	     where member_id = #{member_id}
+	       and is_main = 'Y'
+	     limit 1
 	</select>
 
 </mapper>

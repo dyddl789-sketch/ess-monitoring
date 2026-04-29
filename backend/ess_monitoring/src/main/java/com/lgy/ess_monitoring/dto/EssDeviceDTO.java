@@ -18,5 +18,8 @@ public class EssDeviceDTO {
     private String device_type;     // 장비 종류
     private String status;          // 현재 상태
     private String install_date;    // 설치 날짜
+    
+    
+    private String is_main; // 대표 디바이스 여부
 	
 }
