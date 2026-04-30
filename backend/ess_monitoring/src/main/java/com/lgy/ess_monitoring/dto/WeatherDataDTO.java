@@ -16,10 +16,10 @@ public class WeatherDataDTO {
 
     private String skyStatus;
     private String rainType;
-    private int rainProb;
+    private Integer rainProb;
 
     private BigDecimal temperature;
-    private int humidity;
+    private Integer humidity;
     private BigDecimal windSpeed;
     private BigDecimal solarRadiation;
 
@@ -32,4 +32,6 @@ public class WeatherDataDTO {
 
     private String baseDate;
     private String baseTime;
+    
+    private String displayTime; // 화면 표시용 (오늘 15시, 내일 09시 등)
 }

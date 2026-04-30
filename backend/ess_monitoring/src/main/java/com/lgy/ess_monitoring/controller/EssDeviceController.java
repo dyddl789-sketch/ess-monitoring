@@ -1,6 +1,7 @@
 package com.lgy.ess_monitoring.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -111,36 +112,50 @@ public class EssDeviceController {
         return (result == 1) ? "success" : "fail";
     }
 
-    // ===============================
-    // 5. 상세 페이지 (핵심)
-    // ===============================
-    @RequestMapping("/detail")
-    public String deviceDetailPage(@RequestParam("device_id") int device_id,
-                                   HttpSession session,
-                                   Model model) {
+ // ===============================
+ // 5. 상세 페이지
+ // ===============================
+ @RequestMapping("/detail")
+ public String deviceDetailPage(@RequestParam("device_id") int device_id,
+                                HttpSession session,
+                                Model model) {
 
-        log.info("@# [deviceDetailPage] device_id => {}", device_id);
+     log.info("@# [deviceDetailPage] device_id => {}", device_id);
 
-        Integer member_id = (Integer) session.getAttribute("member_id");
+     // 1. 로그인 여부 확인
+     Integer member_id = (Integer) session.getAttribute("member_id");
 
-        if (member_id == null) {
-            return "redirect:/login_view";
-        }
+     if (member_id == null) {
+         return "redirect:/login_view";
+     }
 
-        EssDeviceDTO device = deviceService.deviceDetail(device_id);
-        EssMonitoringDTO monitor = monitoringService.getLatestMonitoring(device_id);
-        WeatherDataDTO weather = weatherDataService.getLatestWeather(device_id);
+     // 2. 기기 상세 정보 조회
+     EssDeviceDTO device = deviceService.deviceDetail(device_id);
 
-        log.info("@# device => {}", device);
-        log.info("@# monitor => {}", monitor);
-        log.info("@# weather => {}", weather);
+     // 3. 최신 모니터링 데이터 조회
+     EssMonitoringDTO monitor = monitoringService.getLatestMonitoring(device_id);
 
-        model.addAttribute("device", device);
-        model.addAttribute("monitor", monitor);
-        model.addAttribute("weather", weather);
+     // 4. 현재 날씨 1건 조회
+     // DB에 없으면 API 호출 → DB 저장 → 다시 조회
+     WeatherDataDTO weather = weatherDataService.getOrFetchCurrentWeather(device_id);
 
-        return "device/deviceDetail";
-    }
+     // 5. 시간별 날씨 목록 조회
+     // DB에 없으면 API 호출 → DB 저장 → 다시 조회
+     List<WeatherDataDTO> weatherList = weatherDataService.getOrFetchWeatherList(device_id);
+
+     log.info("@# device => {}", device);
+     log.info("@# monitor => {}", monitor);
+     log.info("@# weather => {}", weather);
+     log.info("@# weatherList size => {}", weatherList == null ? 0 : weatherList.size());
+
+     // 6. JSP로 데이터 전달
+     model.addAttribute("device", device);
+     model.addAttribute("monitor", monitor);
+     model.addAttribute("weather", weather);
+     model.addAttribute("weatherList", weatherList);
+
+     return "device/deviceDetail";
+ }
 
     // ===============================
     // 6. 상세 Ajax (필요시 유지)

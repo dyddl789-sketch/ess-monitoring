@@ -215,23 +215,27 @@
         <div class="summary-card">
             <h4>예상 영향</h4>
             
-		    <c:choose>
-		        <c:when test="${empty weather}">
-		            <strong>--</strong>
-		        </c:when>
-		
-		        <c:when test="${weather.essStatus eq '발전 효율 양호'}">
-		            <strong class="status-normal">${weather.essStatus}</strong>
-		        </c:when>
-		
-		        <c:when test="${weather.essStatus eq '발전 저하'}">
-		            <strong class="status-danger">${weather.essStatus}</strong>
-		        </c:when>
-		
-		        <c:otherwise>
-		            <strong class="status-warning">${weather.essStatus}</strong>
-		        </c:otherwise>
-		    </c:choose>
+				<c:choose>
+				    <c:when test="${empty weather}">
+				        <strong>--</strong>
+				    </c:when>
+				
+				    <c:when test="${weather.essStatus eq '발전 조건 양호'}">
+				        <strong class="status-normal">${weather.essStatus}</strong>
+				    </c:when>
+				
+				    <c:when test="${weather.essStatus eq '발전량 저하 예상'}">
+				        <strong class="status-danger">${weather.essStatus}</strong>
+				    </c:when>
+				
+				    <c:when test="${weather.essStatus eq '야간 발전 없음'}">
+				        <strong class="status-warning">${weather.essStatus}</strong>
+				    </c:when>
+				
+				    <c:otherwise>
+				        <strong class="status-warning">${weather.essStatus}</strong>
+				    </c:otherwise>
+				</c:choose>
 		
 		    <p>날씨 기반 ESS 분석 결과</p>
         </div>
@@ -283,47 +287,158 @@
             </table>
         </div>
 
-        <div class="detail-panel">
-            <h3>날씨 정보</h3>
-
-            <table class="monitor-table">
-				<tr>
-				    <th>하늘 상태</th>
-				    <td>${empty weather ? '--' : weather.skyStatus}</td>
-				</tr>
-				<tr>
-				    <th>기온</th>
-				    <td>${empty weather ? '--℃' : weather.temperature}℃</td>
-				</tr>
-				<tr>
-				    <th>강수 형태</th>
-				    <td>${empty weather ? '--' : weather.rainType}</td>
-				</tr>
-				<tr>
-				    <th>강수 확률</th>
-				    <td>${empty weather ? '--%' : weather.rainProb}</td>
-				</tr>
-				<tr>
-				    <th>풍속</th>
-				    <td>${empty weather ? '--m/s' : weather.windSpeed}m/s</td>
-				</tr>
-				<tr>
-				    <th>일사량</th>
-				    <td>${empty weather ? '--' : weather.solarRadiation}W/m²</td>
-				</tr>
-				<tr>
-				    <th>일출</th>
-				    <td>${empty weather ? '--' : weather.sunrise}</td>
-				</tr>
-				<tr>
-				    <th>일몰</th>
-				    <td>${empty weather ? '--' : weather.sunset}</td>
-				</tr>
-            </table>
-        </div>
+	<div class="detail-panel">
+	    <h3>날씨 정보</h3>
+	
+	    <table class="monitor-table">
+	        <tr>
+	            <th>하늘 상태</th>
+	            <td>${empty weather ? '--' : weather.skyStatus}</td>
+	        </tr>
+	
+	        <tr>
+	            <th>기온</th>
+	            <td>
+	                <c:choose>
+	                    <c:when test="${empty weather or empty weather.temperature}">
+	                        --℃
+	                    </c:when>
+	                    <c:otherwise>
+	                        ${weather.temperature}℃
+	                    </c:otherwise>
+	                </c:choose>
+	            </td>
+	        </tr>
+	
+	        <tr>
+	            <th>강수 형태</th>
+	            <td>${empty weather ? '--' : weather.rainType}</td>
+	        </tr>
+	
+	        <tr>
+	            <th>강수 확률</th>
+	            <td>
+	                <c:choose>
+	                    <c:when test="${empty weather}">
+	                        --%
+	                    </c:when>
+	                    <c:otherwise>
+	                        ${weather.rainProb}%
+	                    </c:otherwise>
+	                </c:choose>
+	            </td>
+	        </tr>
+	
+	        <tr>
+	            <th>습도</th>
+	            <td>
+	                <c:choose>
+	                    <c:when test="${empty weather}">
+	                        --%
+	                    </c:when>
+	                    <c:otherwise>
+	                        ${weather.humidity}%
+	                    </c:otherwise>
+	                </c:choose>
+	            </td>
+	        </tr>
+	
+	        <tr>
+	            <th>풍속</th>
+	            <td>
+	                <c:choose>
+	                    <c:when test="${empty weather or empty weather.windSpeed}">
+	                        --m/s
+	                    </c:when>
+	                    <c:otherwise>
+	                        ${weather.windSpeed}m/s
+	                    </c:otherwise>
+	                </c:choose>
+	            </td>
+	        </tr>
+	
+	        <tr>
+	            <th>일사량</th>
+	            <td>
+	                <c:choose>
+	                    <c:when test="${empty weather or empty weather.solarRadiation}">
+	                        --W/m²
+	                    </c:when>
+	                    <c:otherwise>
+	                        ${weather.solarRadiation}W/m²
+	                    </c:otherwise>
+	                </c:choose>
+	            </td>
+	        </tr>
+	
+	        <tr>
+	            <th>일출</th>
+	            <td>
+	                <c:choose>
+	                    <c:when test="${empty weather or empty weather.sunrise}">
+	                        --
+	                    </c:when>
+	                    <c:otherwise>
+	                        ${weather.sunrise}
+	                    </c:otherwise>
+	                </c:choose>
+	            </td>
+	        </tr>
+	
+	        <tr>
+	            <th>일몰</th>
+	            <td>
+	                <c:choose>
+	                    <c:when test="${empty weather or empty weather.sunset}">
+	                        --
+	                    </c:when>
+	                    <c:otherwise>
+	                        ${weather.sunset}
+	                    </c:otherwise>
+	                </c:choose>
+	            </td>
+	        </tr>
+	    </table>
+	</div>
 
     </div>
-
+	<div class="detail-panel" style="margin-bottom:25px;">
+	    <h3>시간별 날씨 예보</h3>
+	
+	    <table class="monitor-table">
+	        <tr>
+	            <th>예보 시간</th>
+	            <th>하늘</th>
+	            <th>기온</th>
+	            <th>강수</th>
+	            <th>강수확률</th>
+	            <th>습도</th>
+	            <th>풍속</th>
+	        </tr>
+	
+	        <c:choose>
+	            <c:when test="${empty weatherList}">
+	                <tr>
+	                    <td colspan="7">조회된 시간별 날씨 데이터가 없습니다.</td>
+	                </tr>
+	            </c:when>
+	
+	            <c:otherwise>
+	                <c:forEach var="w" items="${weatherList}">
+	                    <tr>
+	                        <td>${w.displayTime}</td>
+	                        <td>${w.skyStatus}</td>
+	                        <td>${w.temperature}℃</td>
+	                        <td>${w.rainType}</td>
+	                        <td>${w.rainProb}%</td>
+	                        <td>${w.humidity}%</td>
+	                        <td>${w.windSpeed}m/s</td>
+	                    </tr>
+	                </c:forEach>
+	            </c:otherwise>
+	        </c:choose>
+	    </table>
+	</div>
     <div class="detail-panel chart-panel">
         <h3>에너지 분석</h3>
         <div class="chart-placeholder">
