@@ -21,5 +21,8 @@ public interface EssDeviceService {
 	    public int deleteDevice(@Param("device_id")int device_id, @Param("member_id")int member_id);
 	    
 	    //상세 보기
-	    public EssDeviceDTO deviceDetail(int device_id);	    
+	    public EssDeviceDTO deviceDetail(int device_id);
+	    
+	    //대쉬 보드 기기 상태 목록 조회
+	    public ArrayList<EssDeviceDTO> getDashboardDeviceStatusList(int member_id);
 }

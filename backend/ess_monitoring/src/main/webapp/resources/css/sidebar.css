@@ -1,0 +1,84 @@
+/* ===== 전체 레이아웃 ===== */
+.layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f5f7fa;
+}
+
+/* ===== 사이드바 ===== */
+.sidebar {
+    width: 240px;
+    background-color: #1e293b; /* 짙은 네이비 */
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+}
+
+/* ===== 로고 ===== */
+.sidebar .logo {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+}
+
+/* ===== 메뉴 타이틀 ===== */
+.sidebar .menu-title {
+    font-size: 12px;
+    color: #94a3b8;
+    margin: 16px 20px 8px;
+    text-transform: uppercase;
+}
+
+/* ===== 기본 메뉴 ===== */
+.sidebar .menu-item {
+    display: block;
+    padding: 12px 20px;
+    color: #cbd5f5;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.2s, color 0.2s;
+}
+
+/* ===== hover ===== */
+.sidebar .menu-item:hover {
+    background-color: #334155;
+    color: #ffffff;
+}
+
+/* ===== active 메뉴 ===== */
+.sidebar .menu-item.active {
+    background-color: #2563eb; /* 파랑 */
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* ===== 서브 메뉴 ===== */
+.sidebar .sub-menu {
+    display: flex;
+    flex-direction: column;
+}
+
+/* 서브 메뉴 링크 */
+.sidebar .sub-menu a {
+    display: block;
+    padding: 10px 30px;
+    font-size: 13px;
+    color: #cbd5f5;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+/* 서브 메뉴 hover */
+.sidebar .sub-menu a:hover {
+    background-color: #334155;
+    color: #ffffff;
+}
+
+/* ===== 메인 영역 ===== */
+.main {
+    flex: 1;
+    padding: 24px;
+}

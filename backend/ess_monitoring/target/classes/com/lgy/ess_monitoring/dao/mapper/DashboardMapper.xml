@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lgy.ess_monitoring.dao.DashboardDAO">
+
+	<select id="getDashboardSummary" resultType="com.lgy.ess_monitoring.dto.DashboardSummaryDTO">
+	    SELECT
+	        COUNT(d.device_id) AS totalDeviceCount,
+	
+	        SUM(CASE WHEN d.status = 'NORMAL' THEN 1 ELSE 0 END) AS normalDeviceCount,
+	        SUM(CASE WHEN d.status = 'WARNING' THEN 1 ELSE 0 END) AS warningDeviceCount,
+	        SUM(CASE WHEN d.status = 'ERROR' THEN 1 ELSE 0 END) AS errorDeviceCount,
+	        SUM(CASE WHEN d.status = 'OFFLINE' THEN 1 ELSE 0 END) AS offlineDeviceCount,
+	
+	        /* 오늘 예상 발전량 합계
+	           - OFFLINE 제외
+	           - 음수 제외
+	           - 설비용량(kW) 기준 하루 최대 발전량을 넘는 비정상값 제외
+	           - 하루 최대 발전량 기준: capacity_kw * 24 */
+	        IFNULL(
+	            SUM(
+	                CASE
+	                    WHEN d.status != 'OFFLINE'
+	                     AND m.solar_generation_kwh BETWEEN 0 AND d.capacity_kw * 24
+	                    THEN m.solar_generation_kwh
+	                END
+	            ),
+	            0
+	        ) AS todayGenerationKwh,
+	
+	        /* 오늘 평균 SOC
+	           - OFFLINE 제외
+	           - SOC 정상 범위 0~100만 포함 */
+	        IFNULL(
+	            AVG(
+	                CASE
+	                    WHEN d.status != 'OFFLINE'
+	                     AND m.soc BETWEEN 0 AND 100
+	                    THEN m.soc
+	                END
+	            ),
+	            0
+	        ) AS averageSoc,
+	
+	        /* 오늘 예상 절감 금액 합계
+	           - OFFLINE 제외
+	           - 음수 제외
+	           - 발전량 * 전기요금 단가를 과도하게 넘는 값 제외 */
+	        IFNULL(
+	            SUM(
+	                CASE
+	                    WHEN d.status != 'OFFLINE'
+	                     AND m.saved_cost >= 0
+	                     AND m.solar_generation_kwh BETWEEN 0 AND d.capacity_kw * 24
+	                     AND m.saved_cost &lt;= m.solar_generation_kwh * d.electricity_rate
+	                    THEN m.saved_cost
+	                END
+	            ),
+	            0
+	        ) AS todaySavedCost
+	
+	    FROM ess_device d
+	    LEFT JOIN monitoring m
+	        ON d.device_id = m.device_id
+	        AND m.record_time >= CURDATE()
+	        AND m.record_time &lt; DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+	
+	    WHERE d.member_id = #{memberId}
+	</select>
+
+</mapper>

@@ -19,6 +19,7 @@ import com.lgy.ess_monitoring.dto.EssMonitoringDTO;
 import com.lgy.ess_monitoring.service.EssDeviceService;
 import com.lgy.ess_monitoring.service.EssMonitoringService;
 import com.lgy.ess_monitoring.dto.WeatherDataDTO;
+import com.lgy.ess_monitoring.enums.DeviceStatus;
 import com.lgy.ess_monitoring.service.WeatherDataService;
 
 
@@ -65,7 +66,7 @@ public class EssDeviceController {
         deviceDTO.setMember_id(member_id);
 
         if (deviceDTO.getStatus() == null || deviceDTO.getStatus().equals("")) {
-            deviceDTO.setStatus("정상");
+            deviceDTO.setStatus(DeviceStatus.NORMAL.name());
         }
 
         deviceService.inseretDevice(deviceDTO);

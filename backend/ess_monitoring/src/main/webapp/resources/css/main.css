@@ -1,373 +1,338 @@
-/* 기본 초기화 */
+/* =========================
+   Main Page CSS
+========================= */
+
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
 }
 
 body {
-    font-family: 'Pretendard', sans-serif; /* 깔끔한 폰트 권장 */
-    line-height: 1.6;
-    color: #333;
+    margin: 0;
+    background: #020617;
+    color: #e2e8f0;
+    font-family: 'Malgun Gothic', Arial, sans-serif;
 }
 
-.container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 20px;
+button {
+    font-family: inherit;
 }
 
-/* 상단 메뉴바 */
-header {
-    background: #fff;
-    border-bottom: 1px solid #ddd;
-    padding: 15px 0;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-header nav ul {
-    display: flex;
-    list-style: none;
-}
-
-header nav ul li {
-    margin-left: 20px;
-}
-
-header nav ul li a {
+a {
+    color: inherit;
     text-decoration: none;
-    color: #333;
-    font-weight: bold;
 }
 
-/* 히어로 섹션 */
+/* =========================
+   Hero
+========================= */
+
 .hero {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('../photo/자연 풍경(도시포함).jpg');
-    background-size: cover;
-    background-position: center;
-    height: 500px;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-
-.hero h2 { font-size: 3rem; margin-bottom: 10px; }
-.btn {
-    padding: 10px 25px;
-    background: #007bff;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    margin-top: 20px;
-    border-radius: 5px;
-}
-
-/* 서비스 소개 */
-.services {
-    display: flex;
-    gap: 20px;
-    padding: 60px 0;
-}
-
-.service-card {
-    flex: 1;
-    padding: 30px;
-    background: #f9f9f9;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-/* 게시판 */
-.board { padding: 40px 0; }
-.board-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-.board-table th, .board-table td {
-    padding: 12px;
-    border-bottom: 1px solid #eee;
-    text-align: left;
-}
-
-.board-table th { background: #f4f4f4; }
-
-/* 기존 네비게이션 스타일 유지 및 로그인 버튼 강조 */
-header nav ul {
-    display: flex;
-    list-style: none;
-    align-items: center; /* 세로 중앙 정렬 */
-}
-
-header nav ul li {
-    margin-left: 20px;
-}
-
-header nav ul li a {
-    text-decoration: none;
-    color: #333;
-    font-weight: 500;
-    transition: color 0.3s;
-}
-
-header nav ul li a:hover {
-    color: #007bff; /* 마우스 올렸을 때 강조색 */
-}
-
-/* 로그인 버튼 전용 스타일 */
-.login-btn {
-    padding: 7px 10px;
-    border: 2px solid #007bff; /* 파란색 테두리 */
-    border-radius: 10px;       /* 둥근 버튼 형태 */
-    color: #007bff !important; /* 글자색 강제 지정 */
-    transition: all 0.3s ease;
-}
-
-.login-btn:hover {
-    background-color: #007bff; /* 마우스 올리면 배경이 파란색으로 */
-    color: #fff !important;    /* 글자색은 흰색으로 */
-}
-
-/* 날씨 섹션 스타일 */
-.weather-section {
-    padding: 10px 10px;
-    background: #ffffff;
-    margin-top: -10px; /* Hero 섹션에 살짝 걸치게 하여 세련된 느낌 연출 */
     position: relative;
-    z-index: 10;
-    border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
-
-.weather-title {
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-.weather-title h3 {
-    font-size: 1.0rem;
-    color: #2c3e50;
-}
-
-.weather-grid {
+    min-height: 560px;
+    color: #ffffff;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(2, 6, 23, 0.96) 0%,
+            rgba(15, 23, 42, 0.86) 52%,
+            rgba(15, 23, 42, 0.55) 100%
+        ),
+        url('../img/solar-main.jpg') center/cover no-repeat;
     display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.weather-item {
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    padding: 5px;
-    min-width: 50px;
 }
 
-.weather-item .city {
-    font-weight: bold;
-    font-size: 1.0rem;
-    margin-bottom: 5px;
+.hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 18% 35%, rgba(37, 99, 235, 0.22), transparent 28%),
+        radial-gradient(circle at 80% 20%, rgba(14, 165, 233, 0.18), transparent 26%);
+    pointer-events: none;
 }
 
-.weather-item .icon {
-    font-size: 1.5rem;
-    margin-bottom: 5px;
+.hero-content {
+    position: relative;
+    z-index: 2;
+    width: 1280px;
+    max-width: calc(100% - 40px);
+    margin: 0 auto;
+    padding-bottom: 60px;
 }
 
-.weather-item .temp {
-    color: #007bff;
-    font-weight: bold;
-    font-size: 1.0rem;
-}
-.device-main {
-    padding: 10px 0;
+.hero-badge {
+    display: inline-block;
+    padding: 8px 16px;
+    margin-bottom: 22px;
+    border-radius: 999px;
+    background: rgba(37, 99, 235, 0.16);
+    border: 1px solid rgba(147, 197, 253, 0.35);
+    color: #bfdbfe;
+    font-size: 13px;
+    font-weight: 800;
 }
 
-.section-title {
-    margin-bottom: 25px;
+.hero h2 {
+    margin: 0 0 18px;
+    font-size: 2.9rem;
+    line-height: 1.18;
+    font-weight: 900;
+    letter-spacing: -1.5px;
 }
 
-.device-card-grid {
+.hero p {
+    margin: 0 0 28px;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #e5e7eb;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.hero-btn {
+    border: none;
+    border-radius: 12px;
+    padding: 18px 36px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 12px 24px rgba(37, 99, 235, 0.28);
+    transition: 0.2s;
+}
+
+.hero-btn.secondary {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.5);
+    box-shadow: none;
+}
+
+.hero-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+}
+
+/* =========================
+   Main Content
+========================= */
+
+.main-content-wrap {
+    width: 1280px;
+    max-width: calc(100% - 40px);
+    margin: 0 auto;
+}
+
+#contentArea {
+    width: 100%;
+    margin: 0;
+    padding: 70px 0;
+    border: 0;
+    background: transparent;
+    color: #e2e8f0;
+}
+
+.content-section {
+    padding: 40px;
+    border-radius: 22px;
+    background: #0f172a;
+    border: 1px solid #1e293b;
+}
+
+.notice-section {
+    margin-top: 30px;
+}
+
+/* =========================
+   Guide Section
+========================= */
+
+.main-guide-head {
+    margin-bottom: 26px;
+}
+
+.main-guide-head span {
+    display: inline-block;
+    margin-bottom: 10px;
+    color: #60a5fa;
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.main-guide-head h3 {
+    margin: 0 0 10px;
+    font-size: 28px;
+    color: #f8fafc;
+}
+
+.main-guide-head p {
+    margin: 0;
+    color: #94a3b8;
+    line-height: 1.7;
+}
+
+.main-guide-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 18px;
 }
 
-.device-card {
-    background: #ffffff;
-    border: 1px solid #ddd;
+.main-guide-card {
+    min-height: 180px;
+    padding: 24px;
     border-radius: 16px;
-    padding: 22px;
+    background: #111c31;
+    border: 1px solid #263449;
     cursor: pointer;
     transition: 0.2s;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 
-.device-card:hover {
+.main-guide-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+    border-color: #3b82f6;
 }
 
-.device-card-header {
+.main-guide-icon {
+    width: 42px;
+    height: 42px;
+    margin-bottom: 18px;
+    border-radius: 12px;
+    background: #1d4ed8;
+    color: #ffffff;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 900;
 }
 
-.device-location {
-    color: #666;
-    margin: 10px 0 18px;
+.main-guide-card h4 {
+    margin: 0 0 10px;
+    color: #f8fafc;
+    font-size: 19px;
 }
 
-.device-info-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+.main-guide-card p {
+    margin: 0;
+    color: #94a3b8;
+    line-height: 1.6;
+    font-size: 14px;
 }
 
-.device-info-grid div {
-    background: #f8fafc;
+/* =========================
+   Notice
+========================= */
+
+.section-title span {
+    color: #60a5fa;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.section-title h3 {
+    margin: 8px 0 10px;
+    color: #f8fafc;
+    font-size: 30px;
+}
+
+.section-title p {
+    margin: 0 0 24px;
+    color: #94a3b8;
+}
+
+.fake-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #0f172a;
+    font-size: 14px;
+}
+
+.fake-table th,
+.fake-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #1e293b;
+    text-align: left;
+}
+
+.fake-table th {
+    background: #111c31;
+    color: #cbd5e1;
+    font-weight: 800;
+}
+
+.fake-table td {
+    color: #e2e8f0;
+}
+
+.fake-table a:hover {
+    color: #60a5fa;
+}
+
+/* =========================
+   Status / Badge Common
+========================= */
+
+.status-normal {
+    color: #22c55e !important;
+}
+
+.status-warning {
+    color: #f59e0b !important;
+}
+
+.status-danger {
+    color: #ef4444 !important;
+}
+
+.badge {
+    padding: 4px 8px;
     border-radius: 10px;
-    padding: 12px;
+    font-size: 0.8rem;
 }
 
-.device-info-grid span {
-    display: block;
-    color: #777;
-    font-size: 0.85rem;
-    margin-bottom: 4px;
-}
-
-.device-info-grid strong {
-    font-size: 1.2rem;
-}
-
-.status-badge {
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: bold;
-}
-
-.status-badge.normal {
+.badge.green {
     background: #dcfce7;
     color: #166534;
 }
 
-.status-badge.warning {
+.badge.yellow {
     background: #fef3c7;
     color: #92400e;
 }
 
-.status-badge.danger {
+.badge.red {
     background: #fee2e2;
     color: #991b1b;
 }
 
-.device-message {
-    margin-top: 16px;
-    color: #444;
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 900px) {
+    .hero {
+        min-height: 430px;
+    }
+
+    .hero h2 {
+        font-size: 2rem;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .main-guide-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .content-section {
+        padding: 28px 20px;
+    }
 }
-
-/*device/registerForm*/
-
-.device-register-box {
-    background: #ffffff;
-    border-radius: 18px;
-    padding: 24px;
-}
-
-.device-form-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.device-form-table th,
-.device-form-table td {
-    border-bottom: 1px solid #e5e7eb;
-    padding: 14px 12px;
-    text-align: left;
-}
-
-.device-form-table th {
-    width: 180px;
-    color: #334155;
-    background: #f8fafc;
-    font-weight: 800;
-}
-
-.form-input {
-    width: 100%;
-    max-width: 520px;
-    padding: 10px 12px;
-    border: 1px solid #cbd5e1;
-    border-radius: 9px;
-    font-size: 14px;
-}
-
-.form-input.short {
-    max-width: 180px;
-}
-
-.address-row {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-.detail-address {
-    margin-top: 8px;
-}
-
-.address-result {
-    margin-top: 8px;
-    color: #475569;
-    font-size: 13px;
-    line-height: 1.5;
-}
-
-.form-button-area {
-    margin-top: 22px;
-    display: flex;
-    gap: 8px;
-}
-
-.btn-primary,
-.btn-sub,
-.btn-gray-form {
-    border: none;
-    border-radius: 9px;
-    padding: 10px 16px;
-    cursor: pointer;
-    font-weight: 800;
-}
-
-.btn-primary {
-    background: #0f766e;
-    color: white;
-}
-
-.btn-sub {
-    background: #0f172a;
-    color: white;
-    white-space: nowrap;
-}
-
-.btn-gray-form {
-    background: #64748b;
-    color: white;
-}
-

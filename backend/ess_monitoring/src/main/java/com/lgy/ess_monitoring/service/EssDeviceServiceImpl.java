@@ -76,6 +76,13 @@ public class EssDeviceServiceImpl implements EssDeviceService{
 		return dto;
 	}
 	
+	@Override
+	public ArrayList<EssDeviceDTO> getDashboardDeviceStatusList(int member_id) {
+		
+		EssDeviceDAO dao = sqlSession.getMapper(EssDeviceDAO.class);
+	    return dao.getDashboardDeviceStatusList(member_id);
+	}
+	
 }
 
 

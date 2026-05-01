@@ -82,5 +82,53 @@
 	    FROM ess_device
 	    WHERE device_id = #{device_id}
 	</select>
+	
+	<select id="getDashboardDeviceStatusList"
+        parameterType="int"
+        resultType="com.lgy.ess_monitoring.dto.EssDeviceDTO">
 
+    SELECT
+	        d.device_id,
+	        d.member_id,
+	        d.group_id,
+	        d.device_name,
+	        d.location,
+	        d.capacity_kw,
+	        d.device_type,
+	        d.status,
+	        d.install_date,
+	        d.latitude,
+	        d.longitude,
+	        d.nx,
+	        d.ny,
+	        d.is_main,
+	        d.ess_capacity_kwh,
+	        d.current_charge_kwh,
+	        d.charge_efficiency,
+	        d.discharge_efficiency,
+	        d.electricity_rate,
+	
+	        g.group_name,
+	
+	        m.soc,
+	        m.record_time
+	
+	    FROM ess_device d
+	
+	    LEFT JOIN ess_device_group g
+	        ON d.group_id = g.group_id
+	
+	    LEFT JOIN monitoring m
+	        ON m.device_id = d.device_id
+	       AND m.record_time = (
+	            SELECT MAX(m2.record_time)
+	            FROM monitoring m2
+	            WHERE m2.device_id = d.device_id
+	       )
+	
+	    WHERE d.member_id = #{member_id}
+	
+	    ORDER BY d.device_id DESC
+	
+	</select>
 </mapper>

@@ -22,4 +22,7 @@ public interface EssDeviceDAO {
     
     //상세 보기
     public EssDeviceDTO deviceDetail(int device_id);
+    
+ // 대시보드용 장비 상태 리스트
+    public ArrayList<EssDeviceDTO> getDashboardDeviceStatusList(int member_id);
 }
