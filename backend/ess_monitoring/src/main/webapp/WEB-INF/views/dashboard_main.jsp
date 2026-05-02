@@ -21,51 +21,47 @@
     </div>
 
     <div class="filter-box">
-      <select>
-        <option>전체 그룹</option>
-        <option>서울공장</option>
-        <option>부산물류센터</option>
-      </select>
+		<select id="groupSelect">
+		  <option value="">전체 그룹</option>
+		  <option value="1">서울공장 ESS</option>
+		  <option value="2">인천물류센터 ESS</option>
+		</select>
+		
+		<select id="deviceSelect">
+		  <option value="">전체 장비</option>
+		  <option value="3">서울공장 1호기</option>
+		  <option value="4">서울공장 2호기</option>
+		  <option value="5">인천물류센터 1호기</option>
+		</select>
 
-      <select>
-        <option>전체 장비</option>
-        <option>서울공장 ESS 1호기</option>
-        <option>부산센터 ESS 2호기</option>
-      </select>
-
-      <input type="date" value="2025-05-20">
-      <button>새로고침</button>
+      <input type="date" id="selectedDate" value="${selectedDate}">
+      <button type="button" id="refreshBtn">조회</button>
     </div>
 
     <section class="card-grid">
-      <div class="card">
-        <div class="card-title">총 장비 수</div>
-        <div class="card-value">${summary.totalDeviceCount}대</div>
-        <div class="card-sub">
-        	    정상 ${summary.normalDeviceCount} · 
-			    경고 ${summary.warningDeviceCount} · 
-			    오류 ${summary.errorDeviceCount}	·
-			    오프라인 ${summary.offlineDeviceCount}
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">오늘 예상 발전량</div>
-        <div class="card-value"><fmt:formatNumber value="${summary.todayGenerationKwh}" pattern="#,##0.0"/> kWh</div>
-        <div class="card-sub">어제 대비 ▲ 12.5%</div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">현재 평균 SOC</div>
-        <div class="card-value"><fmt:formatNumber value="${summary.averageSoc}" pattern="#,##0.0"/>%</div>
-        <div class="card-sub">어제 대비 ▲ 4.1%</div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">오늘 예상 절감 금액</div>
-        <div class="card-value"><fmt:formatNumber value="${summary.todaySavedCost}" pattern="#,###"/>원</div>
-        <div class="card-sub">어제 대비 ▲ 8.3%</div>
-      </div>
+		<div class="card">
+		    <div class="card-title">총 장비 수</div>
+		    <div class="card-value" id="totalDeviceCount">-</div>
+		    <div class="card-sub" id="deviceStatusCount">-</div>
+		</div>
+		
+		<div class="card">
+		    <div class="card-title">오늘 예상 발전량</div>
+		    <div class="card-value" id="todayGenerationKwh">-</div>
+		    <div class="card-sub">어제 대비 ▲ 12.5%</div>
+		</div>
+		
+		<div class="card">
+		    <div class="card-title">현재 평균 SOC</div>
+		    <div class="card-value" id="averageSoc">-</div>
+		    <div class="card-sub">어제 대비 ▲ 4.1%</div>
+		</div>
+		
+		<div class="card">
+		    <div class="card-title">오늘 예상 절감 금액</div>
+		    <div class="card-value" id="todaySavedCost">-</div>
+		    <div class="card-sub">어제 대비 ▲ 8.3%</div>
+		</div>
     </section>
 
     <section class="content-grid">
@@ -261,5 +257,11 @@
 
   </main>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    const contextPath = '${pageContext.request.contextPath}';
+</script>
+<script src="${pageContext.request.contextPath}/resources/js/dashboard_main.js"></script>
 </body>
 </html>

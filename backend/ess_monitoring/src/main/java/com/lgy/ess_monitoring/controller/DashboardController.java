@@ -1,7 +1,5 @@
 package com.lgy.ess_monitoring.controller;
 
-import java.util.ArrayList;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.lgy.ess_monitoring.dto.DashboardSummaryDTO;
-import com.lgy.ess_monitoring.dto.EssDeviceDTO;
 import com.lgy.ess_monitoring.service.DashboardService;
-import com.lgy.ess_monitoring.service.EssDeviceService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,47 +21,46 @@ public class DashboardController {
 
     @Autowired
     private DashboardService dashboardService;
-    @Autowired
-    private EssDeviceService deviceService;
+    
+    @RequestMapping(value="/summary",
+    		method=RequestMethod.GET,
+    		produces="application/json; charset=UTF-8")
+    @ResponseBody
+    public DashboardSummaryDTO getSummary(
+    	    String selectedDate,
+    	    Integer groupId,
+    	    Integer deviceId,
+    	    HttpSession session
+    ) {
+        Integer memberId = (Integer) session.getAttribute("member_id");
+
+        if (memberId == null) {
+            return null;
+        }
+
+        if (selectedDate == null || selectedDate.isEmpty()) {
+            selectedDate = java.time.LocalDate.now().toString();
+        }
+
+        log.info("📊 AJAX 요청 - 날짜: {}, memberId: {}", selectedDate, memberId);
+
+        return dashboardService.getDashboardSummary(memberId, selectedDate, groupId, deviceId);
+    }
     
     
+    //메인화면로딩
     @RequestMapping(value="/main", method=RequestMethod.GET)
     public String dashboardMain(HttpSession session, Model model) {
 
         Integer memberId = (Integer) session.getAttribute("member_id");
 
-        log.info("🔹 로그인 memberId = {}", memberId);
-
+        // 로그인 체크
         if (memberId == null) {
-            log.warn("❗ 로그인 정보 없음 → 로그인 페이지로 이동");
             return "redirect:/login";
         }
+        model.addAttribute("selectedDate", java.time.LocalDate.now().toString());
 
-        DashboardSummaryDTO summary = dashboardService.getDashboardSummary(memberId);
-
-        log.info("🔹 summary 객체 = {}", summary);
-
-        if (summary != null) {
-            log.info("총 장비 수 = {}", summary.getTotalDeviceCount());
-            log.info("정상 장비 수 = {}", summary.getNormalDeviceCount());
-            log.info("경고 장비 수 = {}", summary.getWarningDeviceCount());
-            log.info("오류 장비 수 = {}", summary.getErrorDeviceCount());
-            log.info("오프라인 장비 수 = {}", summary.getOfflineDeviceCount());
-
-            log.info("오늘 발전량 = {}", summary.getTodayGenerationKwh());
-            log.info("평균 SOC = {}", summary.getAverageSoc());
-            log.info("절감 금액 = {}", summary.getTodaySavedCost());
-        } else {
-            log.warn("❗ summary가 null 입니다 (DB 조회 실패 가능성)");
-        }
-
-        model.addAttribute("summary", summary);
-        
-     //  장비 상태 리스트 추가
-        ArrayList<EssDeviceDTO> deviceList = deviceService.getDashboardDeviceStatusList(memberId);
-
-        model.addAttribute("deviceList", deviceList);
-
+        // 화면만 반환 (데이터는 AJAX로 처리)
         return "dashboard_main";
     }
 }

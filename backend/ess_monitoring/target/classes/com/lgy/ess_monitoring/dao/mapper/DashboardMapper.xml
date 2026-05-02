@@ -6,7 +6,7 @@
 
 	<select id="getDashboardSummary" resultType="com.lgy.ess_monitoring.dto.DashboardSummaryDTO">
 	    SELECT
-	        COUNT(d.device_id) AS totalDeviceCount,
+	        COUNT(DISTINCT d.device_id) AS totalDeviceCount,
 	
 	        SUM(CASE WHEN d.status = 'NORMAL' THEN 1 ELSE 0 END) AS normalDeviceCount,
 	        SUM(CASE WHEN d.status = 'WARNING' THEN 1 ELSE 0 END) AS warningDeviceCount,
@@ -63,10 +63,17 @@
 	    FROM ess_device d
 	    LEFT JOIN monitoring m
 	        ON d.device_id = m.device_id
-	        AND m.record_time >= CURDATE()
-	        AND m.record_time &lt; DATE_ADD(CURDATE(), INTERVAL 1 DAY)
+			AND m.record_time >= STR_TO_DATE(#{selectedDate}, '%Y-%m-%d')
+			AND m.record_time &lt; DATE_ADD(STR_TO_DATE(#{selectedDate}, '%Y-%m-%d'), INTERVAL 1 DAY)
 	
 	    WHERE d.member_id = #{memberId}
+	    	<if test="groupId != null and groupId != ''">
+			    AND d.group_id = #{groupId}
+			</if>
+			
+			<if test="deviceId != null and deviceId != ''">
+			    AND d.device_id = #{deviceId}
+			</if>
 	</select>
 
 </mapper>
