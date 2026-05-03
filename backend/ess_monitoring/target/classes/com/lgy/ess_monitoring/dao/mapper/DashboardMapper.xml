@@ -8,10 +8,10 @@
 	    SELECT
 	        COUNT(DISTINCT d.device_id) AS totalDeviceCount,
 	
-	        SUM(CASE WHEN d.status = 'NORMAL' THEN 1 ELSE 0 END) AS normalDeviceCount,
-	        SUM(CASE WHEN d.status = 'WARNING' THEN 1 ELSE 0 END) AS warningDeviceCount,
-	        SUM(CASE WHEN d.status = 'ERROR' THEN 1 ELSE 0 END) AS errorDeviceCount,
-	        SUM(CASE WHEN d.status = 'OFFLINE' THEN 1 ELSE 0 END) AS offlineDeviceCount,
+			COUNT(DISTINCT CASE WHEN d.status = 'NORMAL' THEN d.device_id END) AS normalDeviceCount,
+			COUNT(DISTINCT CASE WHEN d.status = 'WARNING' THEN d.device_id END) AS warningDeviceCount,
+			COUNT(DISTINCT CASE WHEN d.status = 'ERROR' THEN d.device_id END) AS errorDeviceCount,
+			COUNT(DISTINCT CASE WHEN d.status = 'OFFLINE' THEN d.device_id END) AS offlineDeviceCount,
 	
 	        /* 오늘 예상 발전량 합계
 	           - OFFLINE 제외
@@ -75,5 +75,24 @@
 			    AND d.device_id = #{deviceId}
 			</if>
 	</select>
-
+	
+	<select id="getDevices" resultType="com.lgy.ess_monitoring.dto.EssDeviceDTO">
+	    SELECT 
+	        device_id,
+	        device_name
+	    FROM ess_device
+	    WHERE member_id = #{memberId}
+	
+	    <if test="groupId != null and groupId != ''">
+	        AND group_id = #{groupId}
+	    </if>
+	</select>
+	
+	<select id="getGroups" resultType="com.lgy.ess_monitoring.dto.EssDeviceGroupDTO">
+	    SELECT
+	        group_id AS groupId,
+	        group_name AS groupName
+	    FROM ess_device_group
+	    WHERE member_id = #{memberId}
+	</select>
 </mapper>

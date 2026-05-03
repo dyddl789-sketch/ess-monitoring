@@ -22,16 +22,22 @@
 
     <div class="filter-box">
 		<select id="groupSelect">
-		  <option value="">전체 그룹</option>
-		  <option value="1">서울공장 ESS</option>
-		  <option value="2">인천물류센터 ESS</option>
+		    <option value="">전체 그룹</option>
+		    <c:forEach var="group" items="${groupList}">
+		        <option value="${group.groupId}">
+		            ${group.groupName}
+		        </option>
+		    </c:forEach>
 		</select>
 		
 		<select id="deviceSelect">
-		  <option value="">전체 장비</option>
-		  <option value="3">서울공장 1호기</option>
-		  <option value="4">서울공장 2호기</option>
-		  <option value="5">인천물류센터 1호기</option>
+		    <option value="">전체 장비</option>
+		
+		    <c:forEach var="device" items="${deviceList}">
+		        <option value="${device.device_id}">
+		            ${device.device_name}
+		        </option>
+		    </c:forEach>
 		</select>
 
       <input type="date" id="selectedDate" value="${selectedDate}">

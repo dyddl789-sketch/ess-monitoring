@@ -1,5 +1,7 @@
 package com.lgy.ess_monitoring.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.lgy.ess_monitoring.dto.DashboardSummaryDTO;
+import com.lgy.ess_monitoring.dto.EssDeviceDTO;
+import com.lgy.ess_monitoring.dto.EssDeviceGroupDTO;
 import com.lgy.ess_monitoring.service.DashboardService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +26,7 @@ public class DashboardController {
     @Autowired
     private DashboardService dashboardService;
     
+    //요약출력
     @RequestMapping(value="/summary",
     		method=RequestMethod.GET,
     		produces="application/json; charset=UTF-8")
@@ -48,19 +53,40 @@ public class DashboardController {
     }
     
     
-    //메인화면로딩
+    @RequestMapping(value="/devices", method=RequestMethod.GET)
+    @ResponseBody
+    public List<EssDeviceDTO> getDevicesByGroup(
+            Integer groupId,
+            HttpSession session
+    ) {
+        Integer memberId = (Integer) session.getAttribute("member_id");
+
+        return dashboardService.getDevices(memberId, groupId);
+    }
+    
     @RequestMapping(value="/main", method=RequestMethod.GET)
     public String dashboardMain(HttpSession session, Model model) {
 
         Integer memberId = (Integer) session.getAttribute("member_id");
 
-        // 로그인 체크
+        log.info("🔥 session memberId = {}", memberId);
+
         if (memberId == null) {
             return "redirect:/login";
         }
-        model.addAttribute("selectedDate", java.time.LocalDate.now().toString());
 
-        // 화면만 반환 (데이터는 AJAX로 처리)
+        List<EssDeviceGroupDTO> groupList = dashboardService.getGroups(memberId);
+        List<EssDeviceDTO> deviceList = dashboardService.getDevices(memberId, null);
+
+        log.info("🔥 groupList size = {}", groupList.size());
+        log.info("🔥 deviceList size = {}", deviceList.size());
+        log.info("🔥 groupList = {}", groupList);
+        log.info("🔥 deviceList = {}", deviceList);
+
+        model.addAttribute("selectedDate", java.time.LocalDate.now().toString());
+        model.addAttribute("groupList", groupList);
+        model.addAttribute("deviceList", deviceList);
+
         return "dashboard_main";
     }
 }
