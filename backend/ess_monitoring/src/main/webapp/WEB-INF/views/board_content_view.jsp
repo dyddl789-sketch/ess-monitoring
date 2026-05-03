@@ -56,6 +56,7 @@
 .btn-gray { background:#6c757d; }
 .btn-red { background:#dc3545; }
 </style>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
 </head>
 
 <body>
@@ -73,18 +74,19 @@
 
     <div class="detail-box">
         <div class="detail-title">
-            <h2>${content_view.board_title}</h2>
+            <h2>${content_view.boardTitle}</h2>
+
             <div class="detail-meta">
-                작성자: ${content_view.member_name}
+                작성자: ${content_view.memberName}
                 |
                 작성일:
-                <fmt:formatDate value="${content_view.created_at}" pattern="yyyy-MM-dd HH:mm"/>
+                <fmt:formatDate value="${content_view.createdAt}" pattern="yyyy-MM-dd HH:mm"/>
                 |
-                조회수: ${content_view.board_hit}
+                조회수: ${content_view.boardHit}
             </div>
         </div>
 
-        <div class="detail-content">${content_view.board_content}</div>
+        <div class="detail-content">${content_view.boardContent}</div>
     </div>
 
     <div class="btn-area">
@@ -93,45 +95,49 @@
             목록
         </a>
 
-        <c:if test="${loginMemberId == content_view.member_id}">
+        <c:if test="${loginMemberId == content_view.memberId}">
             <button type="button" class="btn" onclick="showModifyForm()">수정</button>
 
-            <form action="${pageContext.request.contextPath}/delete" method="post" style="display:inline;"
+            <form action="${pageContext.request.contextPath}/delete"
+                  method="post"
+                  style="display:inline;"
                   onsubmit="return confirm('정말 삭제하시겠습니까?');">
-                <input type="hidden" name="board_no" value="${content_view.board_no}">
+
+                <input type="hidden" name="boardNo" value="${content_view.boardNo}">
                 <input type="hidden" name="pageNum" value="${empty pageMaker.pageNum ? 1 : pageMaker.pageNum}">
                 <input type="hidden" name="amount" value="${empty pageMaker.amount ? 10 : pageMaker.amount}">
                 <input type="hidden" name="type" value="${pageMaker.type}">
                 <input type="hidden" name="keyword" value="${pageMaker.keyword}">
+
                 <button type="submit" class="btn btn-red">삭제</button>
             </form>
         </c:if>
     </div>
 
-    <c:if test="${loginMemberId == content_view.member_id}">
+    <c:if test="${loginMemberId == content_view.memberId}">
         <div id="modifyForm" style="display:none; margin-top:30px;">
             <form action="${pageContext.request.contextPath}/modify" method="post">
-                <input type="hidden" name="board_no" value="${content_view.board_no}">
+
+                <input type="hidden" name="boardNo" value="${content_view.boardNo}">
                 <input type="hidden" name="pageNum" value="${empty pageMaker.pageNum ? 1 : pageMaker.pageNum}">
                 <input type="hidden" name="amount" value="${empty pageMaker.amount ? 10 : pageMaker.amount}">
                 <input type="hidden" name="type" value="${pageMaker.type}">
                 <input type="hidden" name="keyword" value="${pageMaker.keyword}">
 
-                <div style="margin-bottom:15px;">
+                <div>
                     <label>제목</label>
-                    <input type="text" name="board_title" value="${content_view.board_title}"
-                           style="width:100%; padding:12px; border:1px solid #ddd; border-radius:5px;">
+                    <input type="text" name="boardTitle" value="${content_view.boardTitle}">
                 </div>
 
-                <div style="margin-bottom:15px;">
+                <div>
                     <label>내용</label>
-                    <textarea name="board_content" rows="10"
-                              style="width:100%; padding:12px; border:1px solid #ddd; border-radius:5px;">${content_view.board_content}</textarea>
+                    <textarea name="boardContent" rows="10">${content_view.boardContent}</textarea>
                 </div>
 
-                <div style="text-align:right;">
+                <div>
                     <button type="submit" class="btn">수정 완료</button>
                 </div>
+
             </form>
         </div>
     </c:if>
@@ -142,8 +148,8 @@
 
 <script>
 function showModifyForm() {
-    var box = document.getElementById("modifyForm");
-    box.style.display = box.style.display === "none" ? "block" : "none";
+    const modifyForm = document.getElementById("modifyForm");
+    modifyForm.style.display = modifyForm.style.display === "none" ? "block" : "none";
 }
 </script>
 

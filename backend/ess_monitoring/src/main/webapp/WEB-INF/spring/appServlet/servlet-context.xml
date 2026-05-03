@@ -53,6 +53,8 @@
 	
 	<beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<beans:property name="dataSource" ref="dataSource"></beans:property>
+		<!-- MyBatis 설정 파일 연결 -->
+    	<beans:property name="configLocation" value="classpath:mybatis-config.xml"></beans:property>
 		<!-- 		sql 로 구성된 xml 경로 설정 -->
 		<beans:property name="mapperLocations" value="classpath:com/lgy/ess_monitoring/dao/mapper/*.xml"></beans:property>
 	</beans:bean>

@@ -16,9 +16,9 @@
 
 <body
     data-context-path="${pageContext.request.contextPath}"
-    data-login="${not empty sessionScope.member_id}"
-    data-member-name="${sessionScope.member_name}"
-    data-user-type="${sessionScope.user_type}">
+    data-login="${not empty sessionScope.memberId}"
+    data-member-name="${sessionScope.memberName}"
+    data-user-type="${sessionScope.userType}">
 
 <%@ include file="/WEB-INF/views/header.jsp" %>
 

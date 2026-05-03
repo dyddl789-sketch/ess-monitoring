@@ -11,18 +11,18 @@
                 </a>
             </h1>
 
-            <div class="header-util">
-                <c:choose>
-                    <c:when test="${not empty sessionScope.member_id}">
-                        <span>${sessionScope.member_name}님</span>
-                        <a href="${pageContext.request.contextPath}/logout">로그아웃</a>
-                    </c:when>
-                    <c:otherwise>
-                        <a href="${pageContext.request.contextPath}/login_view">로그인</a>
-                        <a href="${pageContext.request.contextPath}/join_view">회원가입</a>
-                    </c:otherwise>
-                </c:choose>
-            </div>
+		<div class="header-util">
+		    <c:choose>
+		        <c:when test="${not empty sessionScope.memberId}">
+		            <span>${sessionScope.memberName}님</span>
+		            <a href="${pageContext.request.contextPath}/logout">로그아웃</a>
+		        </c:when>
+		        <c:otherwise>
+		            <a href="${pageContext.request.contextPath}/login_view">로그인</a>
+		            <a href="${pageContext.request.contextPath}/join_view">회원가입</a>
+		        </c:otherwise>
+		    </c:choose>
+		</div>
         </div>
     </div>
 
@@ -35,7 +35,11 @@
                     <ul class="sub-menu">
                         <li><a href="${pageContext.request.contextPath}/board_list">공지사항</a></li>
                         <li><a href="#">자료실</a></li>
-                        <li><a href="#">문의게시판</a></li>
+                        <li>
+                        	<a href="${pageContext.request.contextPath}/board_list">
+                        		문의게시판
+                        	</a>
+                        </li>
                     </ul>
                 </li>
 
