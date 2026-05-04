@@ -8,8 +8,7 @@
 
     <!-- 기기 등록 -->
     <insert id="insertDevice" parameterType="com.lgy.ess_monitoring.dto.EssDeviceDTO">
-        insert into ess_device
-        (
+        insert into ess_device (
             member_id,
             group_id,
             device_name,
@@ -23,17 +22,15 @@
             nx,
             ny,
             is_main
-        )
-        values
-        (
-            #{member_id},
-            #{group_id},
-            #{device_name},
+        ) values (
+            #{memberId},
+            #{groupId},
+            #{deviceName},
             #{location},
-            #{capacity_kw},
-            #{device_type},
+            #{capacityKw},
+            #{deviceType},
             #{status},
-            #{install_date},
+            #{installDate},
             #{latitude},
             #{longitude},
             #{nx},
@@ -43,92 +40,98 @@
     </insert>
 
     <!-- 기기 목록 -->
-    <select id="getDeviceList" resultType="com.lgy.ess_monitoring.dto.EssDeviceDTO">
+    <select id="getDeviceList"
+            parameterType="int"
+            resultType="com.lgy.ess_monitoring.dto.EssDeviceDTO">
         select *
         from ess_device
-        where member_id = #{param1}
+        where member_id = #{value}
         order by device_id desc
     </select>
 
     <!-- 기기 수 -->
-    <select id="getDeviceCount" resultType="int">
+    <select id="getDeviceCount"
+            parameterType="int"
+            resultType="int">
         select count(*)
         from ess_device
-        where member_id = #{param1}
+        where member_id = #{value}
     </select>
 
     <!-- 삭제 -->
     <delete id="deleteDevice">
         delete from ess_device
-        where device_id = #{device_id}
-          and member_id = #{member_id}
+        where device_id = #{deviceId}
+          and member_id = #{memberId}
     </delete>
 
     <!-- 상세 -->
-	<select id="deviceDetail" parameterType="int" resultType="com.lgy.ess_monitoring.dto.EssDeviceDTO">
-	    SELECT
-	        device_id,
-	        member_id,
-	        device_name,
-	        location,
-	        capacity_kw,
-	        device_type,
-	        status,
-	        install_date,
-	        latitude,
-	        longitude,
-	        nx,
-	        ny
-	    FROM ess_device
-	    WHERE device_id = #{device_id}
-	</select>
-	
-	<select id="getDashboardDeviceStatusList"
-        parameterType="int"
-        resultType="com.lgy.ess_monitoring.dto.EssDeviceDTO">
+    <select id="deviceDetail"
+            parameterType="int"
+            resultType="com.lgy.ess_monitoring.dto.EssDeviceDTO">
+        select
+            device_id,
+            member_id,
+            group_id,
+            device_name,
+            location,
+            capacity_kw,
+            device_type,
+            status,
+            install_date,
+            latitude,
+            longitude,
+            nx,
+            ny,
+            is_main,
+            ess_capacity_kwh,
+            current_charge_kwh,
+            charge_efficiency,
+            discharge_efficiency,
+            electricity_rate
+        from ess_device
+        where device_id = #{value}
+    </select>
 
-    SELECT
-	        d.device_id,
-	        d.member_id,
-	        d.group_id,
-	        d.device_name,
-	        d.location,
-	        d.capacity_kw,
-	        d.device_type,
-	        d.status,
-	        d.install_date,
-	        d.latitude,
-	        d.longitude,
-	        d.nx,
-	        d.ny,
-	        d.is_main,
-	        d.ess_capacity_kwh,
-	        d.current_charge_kwh,
-	        d.charge_efficiency,
-	        d.discharge_efficiency,
-	        d.electricity_rate,
-	
-	        g.group_name,
-	
-	        m.soc,
-	        m.record_time
-	
-	    FROM ess_device d
-	
-	    LEFT JOIN ess_device_group g
-	        ON d.group_id = g.group_id
-	
-	    LEFT JOIN monitoring m
-	        ON m.device_id = d.device_id
-	       AND m.record_time = (
-	            SELECT MAX(m2.record_time)
-	            FROM monitoring m2
-	            WHERE m2.device_id = d.device_id
-	       )
-	
-	    WHERE d.member_id = #{member_id}
-	
-	    ORDER BY d.device_id DESC
-	
-	</select>
+    <!-- 대시보드용 장비 상태 리스트 -->
+    <select id="getDashboardDeviceStatusList"
+            parameterType="int"
+            resultType="com.lgy.ess_monitoring.dto.EssDeviceDTO">
+        select
+            d.device_id,
+            d.member_id,
+            d.group_id,
+            d.device_name,
+            d.location,
+            d.capacity_kw,
+            d.device_type,
+            d.status,
+            d.install_date,
+            d.latitude,
+            d.longitude,
+            d.nx,
+            d.ny,
+            d.is_main,
+            d.ess_capacity_kwh,
+            d.current_charge_kwh,
+            d.charge_efficiency,
+            d.discharge_efficiency,
+            d.electricity_rate,
+            g.group_name,
+            m.soc,
+            m.record_time
+        from ess_device d
+        left join ess_device_group g
+            on d.group_id = g.group_id
+        left join monitoring m
+            on m.device_id = d.device_id
+           and m.record_time = (
+                select max(m2.record_time)
+                from monitoring m2
+                where m2.device_id = d.device_id
+           )
+        where d.member_id = #{value}
+        order by d.device_id desc
+    </select>
+
 </mapper>

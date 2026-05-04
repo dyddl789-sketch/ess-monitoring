@@ -11,7 +11,7 @@
             <tr>
                 <th>기기 이름</th>
                 <td>
-                    <input type="text" name="device_name" id="device_name"
+                    <input type="text" name="deviceName" id="deviceName"
                            class="form-input"
                            placeholder="예: SOLAR_BUSAN_ESS_01">
                 </td>
@@ -43,7 +43,7 @@
             <tr>
                 <th>장비 용량</th>
                 <td>
-                    <input type="text" name="capacity_kw" id="capacity_kw"
+                    <input type="text" name="capacityKw" id="capacityKw"
                            class="form-input short"
                            placeholder="예: 100"> kW
                 </td>
@@ -52,7 +52,7 @@
             <tr>
                 <th>장비 종류</th>
                 <td>
-                    <select name="device_type" id="device_type" class="form-input">
+                    <select name="deviceType" id="deviceType" class="form-input">
                         <option value="">선택</option>
                         <option value="태양광ESS">태양광ESS</option>
                         <option value="배터리">배터리</option>
@@ -77,7 +77,7 @@
             <tr>
                 <th>설치 날짜</th>
                 <td>
-                    <input type="date" name="install_date" id="install_date"
+                    <input type="date" name="installDate" id="installDate"
                            class="form-input short">
                 </td>
             </tr>

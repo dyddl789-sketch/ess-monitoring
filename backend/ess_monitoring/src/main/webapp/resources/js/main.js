@@ -51,7 +51,6 @@ function ajaxLoad(url, fallbackTitle, fallbackHtml) {
     });
 }
 
-// 기기 등록
 function loadRegister() {
     ajaxLoad(
         "/device/registerForm",
@@ -59,12 +58,10 @@ function loadRegister() {
         "<p>기기 등록 화면을 불러오는 중 오류가 발생했습니다.</p>"
     );
 }
-// 주소검색
+
 function openDeviceAddressSearch() {
     new daum.Postcode({
         oncomplete: function(data) {
-            alert("주소 선택됨");
-
             let address = data.roadAddress || data.jibunAddress;
 
             $("#location").val(address);
@@ -79,7 +76,6 @@ function openDeviceAddressSearch() {
     });
 }
 
-// 주소 → 위도(latitude) / 경도(longitude)로 변환하는 함수
 function searchDeviceAddress() {
     const address = $("#location").val().trim();
 
@@ -110,20 +106,13 @@ function searchDeviceAddress() {
             $("#latitude").val(latitude);
             $("#longitude").val(longitude);
 
-            if (roadAddress !== "") {
-                $("#location").val(roadAddress);
-            } else {
-                $("#location").val(jibunAddress);
-            }
+            $("#location").val(roadAddress !== "" ? roadAddress : jibunAddress);
 
             $("#addressResult").html(
                 "주소 확인 완료<br>" +
                 "위도: " + latitude + "<br>" +
                 "경도: " + longitude
             );
-
-            console.log("@# latitude =>", latitude);
-            console.log("@# longitude =>", longitude);
         } else {
             $("#latitude").val("");
             $("#longitude").val("");
@@ -137,16 +126,16 @@ function searchDeviceAddress() {
 function fn_device_register() {
     console.log("@# fn_device_register() 실행");
 
-    const deviceName = $("#device_name").val().trim();
+    const deviceName = $("#deviceName").val().trim();
     const location = $("#location").val().trim();
-    const capacityKw = $("#capacity_kw").val().trim();
-    const deviceType = $("#device_type").val();
+    const capacityKw = $("#capacityKw").val().trim();
+    const deviceType = $("#deviceType").val();
     const latitude = $("#latitude").val();
     const longitude = $("#longitude").val();
 
     if (deviceName === "") {
         alert("기기 이름을 입력하세요.");
-        $("#device_name").focus();
+        $("#deviceName").focus();
         return;
     }
 
@@ -157,31 +146,30 @@ function fn_device_register() {
     }
 
     if (latitude === "" || longitude === "") {
-        alert("주소 확인 버튼을 눌러 설치 위치를 확인하세요.");
+        alert("주소 검색 버튼을 눌러 설치 위치를 확인하세요.");
         $("#location").focus();
         return;
     }
 
     if (capacityKw === "") {
         alert("장비 용량을 입력하세요.");
-        $("#capacity_kw").focus();
+        $("#capacityKw").focus();
         return;
     }
 
     if (deviceType === "") {
         alert("장비 종류를 선택하세요.");
-        $("#device_type").focus();
+        $("#deviceType").focus();
         return;
     }
-    
-	const baseAddress = $("#location").val().trim();
-	const detailAddress = $("#detailAddress").val().trim();
-	
-	if (detailAddress !== "") {
-	    $("#location").val(baseAddress + " " + detailAddress);
-	}
-	
-	
+
+    const baseAddress = $("#location").val().trim();
+    const detailAddress = $("#detailAddress").val().trim();
+
+    if (detailAddress !== "") {
+        $("#location").val(baseAddress + " " + detailAddress);
+    }
+
     const formData = $("#deviceForm").serialize();
 
     console.log("@# formData =>", formData);
@@ -253,10 +241,10 @@ function loadDeviceList() {
                     if (device.status === "점검") badgeClass = "warning";
                     if (device.status === "오류") badgeClass = "danger";
 
-                    html += "<div class='device-card' onclick='goDeviceDetail(" + device.device_id + ")'>";
+                    html += "<div class='device-card' onclick='goDeviceDetail(" + device.deviceId + ")'>";
 
                     html += "<div class='device-card-header'>";
-                    html += "<h3>" + device.device_name + "</h3>";
+                    html += "<h3>" + device.deviceName + "</h3>";
                     html += "<span class='status-badge " + badgeClass + "'>" + device.status + "</span>";
                     html += "</div>";
 
@@ -285,15 +273,13 @@ function loadDeviceList() {
     });
 }
 
-// 기기상세페이지 이동
-function goDeviceDetail(device_id) {
-    location.href = ctx + "/device/detail?device_id=" + device_id;
+function goDeviceDetail(deviceId) {
+    location.href = ctx + "/device/detail?deviceId=" + deviceId;
 }
 
-// 기기 삭제
-function deleteDevice(device_id) {
+function deleteDevice(deviceId) {
     console.log("@# deleteDevice() 실행");
-    console.log("@# device_id =>", device_id);
+    console.log("@# deviceId =>", deviceId);
 
     if (!confirm("해당 기기를 삭제하시겠습니까?")) {
         return;
@@ -303,7 +289,7 @@ function deleteDevice(device_id) {
         url: ctx + "/device/delete",
         type: "post",
         data: {
-            device_id: device_id
+            deviceId: deviceId
         },
         success: function(result) {
             console.log("@# delete result =>", result);
@@ -344,8 +330,6 @@ function deleteDevice(device_id) {
         }
     });
 }
-
-
 
 function loadMonitor() {
     ajaxLoad(
@@ -448,12 +432,11 @@ function loadViewByName(viewName) {
     } else if (viewName === "myPage") {
         loadMyPage();
     } else {
-        // 기본 메인 상태
         location.href = ctx + "/main";
     }
 }
 
-window.addEventListener("popstate", function(event) {
+window.addEventListener("popstate", function() {
     const params = new URLSearchParams(location.search);
     const view = params.get("view");
 
@@ -472,8 +455,6 @@ $(function() {
         loadViewByName(view);
     }
 });
-
-
 
 $(document).on("click", "#btnRegister", function() {
     checkLogin(function() {

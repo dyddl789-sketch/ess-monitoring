@@ -1,19 +1,16 @@
 package com.lgy.ess_monitoring.service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.lgy.ess_monitoring.dto.EssMonitoringDTO;
 
 public interface EssMonitoringService {
 
-    // 로그인한 회원의 모니터링 데이터 조회
-    public ArrayList<EssMonitoringDTO> getData(int memberId);
+    // 회원 기준 모니터링 목록 조회
+    List<EssMonitoringDTO> getMonitoringListByMemberId(int memberId);
 
-    // 특정 기기의 최신 모니터링 데이터 1건 조회
-    public EssMonitoringDTO getLatestMonitoring(int device_id);
-
-    // DB 테스트용
-    String getDbUser();
+    // 특정 디바이스 최신 데이터
+    EssMonitoringDTO getLatestMonitoring(int deviceId);
 
     // 전체 모니터링 데이터 수
     int getTotalCount();

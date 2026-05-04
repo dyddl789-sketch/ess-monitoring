@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EssMonitoringDTO {
 
-    private int monitor_id;        // PK
-    private int device_id;         // 장비 ID (FK)
+    private int monitorId;        // PK
+    private int deviceId;         // 장비 ID (FK)
 
-    private BigDecimal voltage;    // 전압 (V)
-    private BigDecimal current_a;  // 전류 (A)
-    private BigDecimal soc;        // 충전율 (%)
-    private BigDecimal power_output; // 출력 전력 (kW)
+    private BigDecimal voltage;   // 전압 (V)
+    private BigDecimal currentA;  // 전류 (A)
+    private BigDecimal soc;       // 충전율 (%)
+    private BigDecimal powerOutput; // 출력 전력 (kW)
 
-    private Timestamp record_time; // 측정 시간
+    private Timestamp recordTime; // 측정 시간
 }

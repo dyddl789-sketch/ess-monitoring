@@ -4,10 +4,11 @@
 
 <mapper namespace="com.lgy.ess_monitoring.dao.EssMonitoringDAO">
 
+    <!-- 특정 디바이스의 최신 데이터 1건 조회 -->
     <select id="getLatestMonitoring"
             parameterType="int"
             resultType="com.lgy.ess_monitoring.dto.EssMonitoringDTO">
-        select 
+        SELECT
             monitor_id,
             device_id,
             voltage,
@@ -15,14 +16,17 @@
             soc,
             power_output,
             record_time
-        from monitoring
-        where device_id = #{device_id}
-        order by record_time desc
-        limit 1
+        FROM monitoring
+        WHERE device_id = #{deviceId}
+        ORDER BY record_time DESC
+        LIMIT 1
     </select>
 
-    <select id="getData" resultType="com.lgy.ess_monitoring.dto.EssMonitoringDTO">
-        select 
+    <!-- 회원 기준 모니터링 목록 조회 (device 테이블과 JOIN 필요) -->
+    <select id="getMonitoringListByMemberId"
+            parameterType="int"
+            resultType="com.lgy.ess_monitoring.dto.EssMonitoringDTO">
+        SELECT
             m.monitor_id,
             m.device_id,
             m.voltage,
@@ -30,25 +34,29 @@
             m.soc,
             m.power_output,
             m.record_time
-        from monitoring m
-        join ess_device d on m.device_id = d.device_id
-        where d.member_id = #{memberId}
-        order by m.record_time desc
+        FROM monitoring m
+        JOIN ess_device d
+          ON m.device_id = d.device_id
+        WHERE d.member_id = #{memberId}
+        ORDER BY m.record_time DESC
     </select>
 
-    <select id="getDbUser" resultType="string">
-        select 'test' as user
+    <!-- 전체 모니터링 데이터 개수 -->
+    <select id="getTotalCount"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM monitoring
     </select>
 
-    <select id="getTotalCount" resultType="int">
-        select count(*) from monitoring
-    </select>
-
-    <select id="getMemberCount" parameterType="int" resultType="int">
-        select count(*)
-        from monitoring m
-        join ess_device d on m.device_id = d.device_id
-        where d.member_id = #{memberId}
+    <!-- 회원별 모니터링 데이터 개수 -->
+    <select id="getMemberCount"
+            parameterType="int"
+            resultType="int">
+        SELECT COUNT(*)
+        FROM monitoring m
+        JOIN ess_device d
+          ON m.device_id = d.device_id
+        WHERE d.member_id = #{memberId}
     </select>
 
 </mapper>

@@ -8,14 +8,27 @@ import com.lgy.ess_monitoring.dto.EssDeviceGroupDTO;
 
 public interface DashboardService {
 
-	DashboardSummaryDTO getDashboardSummary(
-		    int memberId,
-		    String selectedDate,
-		    Integer groupId,
-		    Integer deviceId
-		);
+    // ===============================
+    // 대시보드 요약 정보 조회
+    // ===============================
+    DashboardSummaryDTO getDashboardSummary(
+            int memberId,
+            String selectedDate,
+            Integer groupId,
+            Integer deviceId
+    );
 
-	List<EssDeviceDTO> getDevices(int memberId, Integer groupId);
+    // ===============================
+    // 회원 + 그룹 기준 장비 목록 조회
+    // groupId = null이면 전체 조회
+    // ===============================
+    List<EssDeviceDTO> getDevices(
+            int memberId,
+            Integer groupId
+    );
 
-	List<EssDeviceGroupDTO> getGroups(int memberId);
+    // ===============================
+    // 회원 기준 장비 그룹 목록 조회
+    // ===============================
+    List<EssDeviceGroupDTO> getGroups(int memberId);
 }

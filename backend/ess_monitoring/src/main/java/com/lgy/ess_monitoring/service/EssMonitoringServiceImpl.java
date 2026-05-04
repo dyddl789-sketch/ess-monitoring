@@ -1,6 +1,6 @@
 package com.lgy.ess_monitoring.service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +19,12 @@ public class EssMonitoringServiceImpl implements EssMonitoringService {
     private SqlSession sqlSession;
 
     @Override
-    public ArrayList<EssMonitoringDTO> getData(int memberId) {
-        log.info("@# [EssMonitoringServiceImpl] getData()");
+    public List<EssMonitoringDTO> getMonitoringListByMemberId(int memberId) {
+        log.info("@# [EssMonitoringServiceImpl] getMonitoringListByMemberId()");
         log.info("@# [EssMonitoringServiceImpl] memberId => {}", memberId);
 
         EssMonitoringDAO dao = sqlSession.getMapper(EssMonitoringDAO.class);
-        ArrayList<EssMonitoringDTO> list = dao.getData(memberId);
+        List<EssMonitoringDTO> list = dao.getMonitoringListByMemberId(memberId);
 
         log.info("@# [EssMonitoringServiceImpl] list size => {}", list.size());
 
@@ -32,26 +32,18 @@ public class EssMonitoringServiceImpl implements EssMonitoringService {
     }
 
     @Override
-    public EssMonitoringDTO getLatestMonitoring(int device_id) {
-        log.info("@# [EssMonitoringServiceImpl] getLatestMonitoring() 시작");
-        log.info("@# [EssMonitoringServiceImpl] device_id => {}", device_id);
+    public EssMonitoringDTO getLatestMonitoring(int deviceId) {
+        log.info("@# [EssMonitoringServiceImpl] getLatestMonitoring()");
+        log.info("@# [EssMonitoringServiceImpl] deviceId => {}", deviceId);
 
         EssMonitoringDAO dao = sqlSession.getMapper(EssMonitoringDAO.class);
-        EssMonitoringDTO dto = dao.getLatestMonitoring(device_id);
+        EssMonitoringDTO dto = dao.getLatestMonitoring(deviceId);
 
-        log.info("@# [EssMonitoringServiceImpl] 조회 결과 dto => {}", dto);
-        log.info("@# [EssMonitoringServiceImpl] getLatestMonitoring() 종료");
+        log.info("@# [EssMonitoringServiceImpl] dto => {}", dto);
 
         return dto;
     }
 
-    @Override
-    public String getDbUser() {
-        log.info("@# [EssMonitoringServiceImpl] getDbUser()");
-
-        EssMonitoringDAO dao = sqlSession.getMapper(EssMonitoringDAO.class);
-        return dao.getDbUser();
-    }
 
     @Override
     public int getTotalCount() {

@@ -18,16 +18,12 @@ import com.lgy.ess_monitoring.dto.EssDeviceDTO;
 import com.lgy.ess_monitoring.dto.EssMonitoringDTO;
 import com.lgy.ess_monitoring.service.EssDeviceService;
 import com.lgy.ess_monitoring.service.EssMonitoringService;
-import com.lgy.ess_monitoring.dto.WeatherDataDTO;
-import com.lgy.ess_monitoring.enums.DeviceStatus;
-import com.lgy.ess_monitoring.service.WeatherDataService;
-
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
-@RequestMapping("/device") // ⭐ 여기 중요
+@RequestMapping("/device")
 public class EssDeviceController {
 
     @Autowired
@@ -35,141 +31,115 @@ public class EssDeviceController {
 
     @Autowired
     private EssMonitoringService monitoringService;
-    
-    @Autowired
-    private WeatherDataService weatherDataService;
-    
-    // ===============================
-    // 1. 등록 페이지 이동
-    // ===============================
-    @RequestMapping("/registerForm")
+
+    // 등록 페이지 이동
+    @RequestMapping(value = "/registerForm", method = RequestMethod.GET)
     public String registerForm() {
         return "device/registerForm";
     }
 
-    // ===============================
-    // 2. 기기 등록
-    // ===============================
+    // 기기 등록
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
-    public String deviceRegister(EssDeviceDTO deviceDTO, HttpSession session) {
-
+    public String deviceRegister(EssDeviceDTO deviceDto, HttpSession session) {
         log.info("@# deviceRegister()");
-        log.info("@# deviceDTO => {}", deviceDTO);
+        log.info("@# deviceDto => {}", deviceDto);
 
-        Integer member_id = (Integer) session.getAttribute("member_id");
+        Integer memberId = (Integer) session.getAttribute("memberId");
 
-        if (member_id == null) {
-            return "login_view";
+        if (memberId == null) {
+            return "login_required";
         }
 
-        deviceDTO.setMember_id(member_id);
+        deviceDto.setMemberId(memberId);
 
-        if (deviceDTO.getStatus() == null || deviceDTO.getStatus().equals("")) {
-            deviceDTO.setStatus(DeviceStatus.NORMAL.name());
+        if (deviceDto.getStatus() == null || deviceDto.getStatus().isEmpty()) {
+            deviceDto.setStatus("NORMAL");
         }
 
-        deviceService.inseretDevice(deviceDTO);
+        deviceService.insertDevice(deviceDto);
 
         return "success";
     }
 
-    // ===============================
-    // 3. 기기 목록 (Ajax)
-    // ===============================
-    @RequestMapping(value = "/listAjax", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+    // 기기 목록 Ajax
+    @RequestMapping(
+        value = "/listAjax",
+        method = RequestMethod.GET,
+        produces = "application/json; charset=UTF-8"
+    )
     @ResponseBody
     public String deviceList(HttpSession session) throws Exception {
-
         log.info("@# deviceList()");
 
-        Integer member_id = (Integer) session.getAttribute("member_id");
+        Integer memberId = (Integer) session.getAttribute("memberId");
 
-        ArrayList<EssDeviceDTO> deviceList = new ArrayList<>();
+        List<EssDeviceDTO> deviceList = new ArrayList<>();
 
-        if (member_id != null) {
-            deviceList = deviceService.getDeviceList(member_id);
+        if (memberId != null) {
+            deviceList = deviceService.getDeviceList(memberId);
         }
 
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(deviceList);
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(deviceList);
     }
 
-    // ===============================
-    // 4. 기기 삭제
-    // ===============================
+    // 기기 삭제
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    public String deleteDevice(int device_id, HttpSession session) {
+    public String deleteDevice(@RequestParam("deviceId") int deviceId,
+                               HttpSession session) {
+        log.info("@# deleteDevice()");
+        log.info("@# deviceId => {}", deviceId);
 
-        Integer member_id = (Integer) session.getAttribute("member_id");
+        Integer memberId = (Integer) session.getAttribute("memberId");
 
-        if (member_id == null) {
+        if (memberId == null) {
             return "login_required";
         }
 
-        int result = deviceService.deleteDevice(device_id, member_id);
+        int result = deviceService.deleteDevice(deviceId, memberId);
 
         return (result == 1) ? "success" : "fail";
     }
 
- // ===============================
- // 5. 상세 페이지
- // ===============================
- @RequestMapping("/detail")
- public String deviceDetailPage(@RequestParam("device_id") int device_id,
-                                HttpSession session,
-                                Model model) {
+    // 상세 페이지
+    @RequestMapping(value = "/detail", method = RequestMethod.GET)
+    public String deviceDetailPage(@RequestParam("deviceId") int deviceId,
+                                   HttpSession session,
+                                   Model model) {
+        log.info("@# deviceDetailPage()");
+        log.info("@# deviceId => {}", deviceId);
 
-     log.info("@# [deviceDetailPage] device_id => {}", device_id);
+        Integer memberId = (Integer) session.getAttribute("memberId");
 
-     // 1. 로그인 여부 확인
-     Integer member_id = (Integer) session.getAttribute("member_id");
+        if (memberId == null) {
+            return "redirect:/login_view";
+        }
 
-     if (member_id == null) {
-         return "redirect:/login_view";
-     }
+        EssDeviceDTO device = deviceService.deviceDetail(deviceId);
+        EssMonitoringDTO monitor = monitoringService.getLatestMonitoring(deviceId);
 
-     // 2. 기기 상세 정보 조회
-     EssDeviceDTO device = deviceService.deviceDetail(device_id);
+        model.addAttribute("device", device);
+        model.addAttribute("monitor", monitor);
 
-     // 3. 최신 모니터링 데이터 조회
-     EssMonitoringDTO monitor = monitoringService.getLatestMonitoring(device_id);
-
-     // 4. 현재 날씨 1건 조회
-     // DB에 없으면 API 호출 → DB 저장 → 다시 조회
-     WeatherDataDTO weather = weatherDataService.getOrFetchCurrentWeather(device_id);
-
-     // 5. 시간별 날씨 목록 조회
-     // DB에 없으면 API 호출 → DB 저장 → 다시 조회
-     List<WeatherDataDTO> weatherList = weatherDataService.getOrFetchWeatherList(device_id);
-
-     log.info("@# device => {}", device);
-     log.info("@# monitor => {}", monitor);
-     log.info("@# weather => {}", weather);
-     log.info("@# weatherList size => {}", weatherList == null ? 0 : weatherList.size());
-
-     // 6. JSP로 데이터 전달
-     model.addAttribute("device", device);
-     model.addAttribute("monitor", monitor);
-     model.addAttribute("weather", weather);
-     model.addAttribute("weatherList", weatherList);
-
-     return "device/deviceDetail";
- }
-
-    // ===============================
-    // 6. 상세 Ajax (필요시 유지)
-    // ===============================
-    @RequestMapping(value = "/detailAjax", produces = "application/json; charset=UTF-8")
-    @ResponseBody
-    public String deviceDetailAjax(@RequestParam("device_id") int device_id) throws Exception {
-
-        EssDeviceDTO dto = deviceService.deviceDetail(device_id);
-
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(dto);
+        return "device/deviceDetail";
     }
-    
-    
+
+    // 상세 Ajax
+    @RequestMapping(
+        value = "/detailAjax",
+        method = RequestMethod.GET,
+        produces = "application/json; charset=UTF-8"
+    )
+    @ResponseBody
+    public String deviceDetailAjax(@RequestParam("deviceId") int deviceId) throws Exception {
+        log.info("@# deviceDetailAjax()");
+        log.info("@# deviceId => {}", deviceId);
+
+        EssDeviceDTO deviceDto = deviceService.deviceDetail(deviceId);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(deviceDto);
+    }
 }

@@ -13,35 +13,45 @@ import com.lgy.ess_monitoring.dto.EssDeviceGroupDTO;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Service
 @Slf4j
+@Service
 public class DashboardServiceImpl implements DashboardService {
 
     @Autowired
     private SqlSession sqlSession;
 
+    // DAO 가져오기
+    private DashboardDAO getDao() {
+        return sqlSession.getMapper(DashboardDAO.class);
+    }
 
-	@Override
-	public DashboardSummaryDTO getDashboardSummary(
-			int memberId, 
-			String selectedDate, 
-			Integer groupId,
-			Integer deviceId) {
-		 DashboardDAO dao = sqlSession.getMapper(DashboardDAO.class);
-	     return dao.getDashboardSummary(memberId, selectedDate, groupId, deviceId);
-	}
+    // 대시보드 요약 정보 조회
+    @Override
+    public DashboardSummaryDTO getDashboardSummary(
+            int memberId,
+            String selectedDate,
+            Integer groupId,
+            Integer deviceId
+    ) {
+        log.info("getDashboardSummary() memberId={}, selectedDate={}",
+                memberId, selectedDate);
 
+        return getDao().getDashboardSummary(memberId, selectedDate, groupId, deviceId);
+    }
 
-	@Override
-	public List<EssDeviceDTO> getDevices(int memberId, Integer groupId) {
-		DashboardDAO dao = sqlSession.getMapper(DashboardDAO.class);
-		return dao.getDevices(memberId, groupId);
-	}
+    // 회원/그룹 기준 장비 목록 조회
+    @Override
+    public List<EssDeviceDTO> getDevices(int memberId, Integer groupId) {
+        log.info("getDevices() memberId={}, groupId={}", memberId, groupId);
 
+        return getDao().getDevices(memberId, groupId);
+    }
 
-	@Override
-	public List<EssDeviceGroupDTO> getGroups(int memberId) {
-	    DashboardDAO dao = sqlSession.getMapper(DashboardDAO.class);
-	    return dao.getGroups(memberId);
-	}
+    // 회원 기준 장비 그룹 목록 조회
+    @Override
+    public List<EssDeviceGroupDTO> getGroups(int memberId) {
+        log.info("getGroups() memberId={}", memberId);
+
+        return getDao().getGroups(memberId);
+    }
 }

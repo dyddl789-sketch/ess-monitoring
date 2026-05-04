@@ -1,6 +1,7 @@
 package com.lgy.ess_monitoring.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -17,30 +18,34 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @Slf4j
 public class EssMonitoringController {
-	
-	@Autowired
-	private EssMonitoringService service;
-	
-	@RequestMapping("/list")
-	public String list(HttpSession session, Model model) {
-	log.info("@# list()");
 
-	//1. 로그인 체크
-	Integer memberId = (Integer)session.getAttribute("member_id");
-	log.info("@#session member_id=>"+memberId);
-	
-	if (memberId == null) {
-        return "redirect:login_view";
+    @Autowired
+    private EssMonitoringService service;
+
+    @RequestMapping("/list")
+    public String list(HttpSession session, Model model) {
+        log.info("@# list()");
+
+        // 1. 로그인 체크
+        Integer memberId = (Integer) session.getAttribute("memberId");
+        log.info("@# session memberId => {}", memberId);
+
+        if (memberId == null) {
+            return "redirect:login_view";
+        }
+
+        // 2. 회원 기준 모니터링 데이터 조회
+        List<EssMonitoringDTO> list = service.getMonitoringListByMemberId(memberId);
+
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+
+        log.info("@# list size => {}", list.size());
+
+        // 3. JSP 전달
+        model.addAttribute("list", list);
+
+        return "list";
     }
-
-    // 2. 로그인한 회원 데이터 조회
-    ArrayList<EssMonitoringDTO> list = service.getData(memberId);
-	log.info("@# list size => " + list.size());
-
-    // 3. JSP로 전달
-    model.addAttribute("list", list);
-
-    return "list";
-	
-}
 }

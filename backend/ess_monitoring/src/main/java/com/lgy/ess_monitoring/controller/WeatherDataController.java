@@ -21,32 +21,30 @@ public class WeatherDataController {
     private WeatherDataService weatherDataService;
 
     // 현재 날씨 조회
-    // DB에 있으면 DB 사용, 없으면 API 호출 후 저장
     @ResponseBody
     @RequestMapping(
         value = "/weather/current",
         method = RequestMethod.GET,
         produces = "application/json; charset=UTF-8"
     )
-    public WeatherDataDTO currentWeather(int device_id) {
+    public WeatherDataDTO currentWeather(int deviceId) {
 
-        log.info("@# /weather/current 호출 device_id => {}", device_id);
+        log.info("currentWeather() deviceId => {}", deviceId);
 
-        return weatherDataService.getOrFetchCurrentWeather(device_id);
+        return weatherDataService.getOrFetchCurrentWeather(deviceId);
     }
 
     // 시간별 날씨 조회
-    // DB에 있으면 DB 사용, 없으면 API 호출 후 저장
     @ResponseBody
     @RequestMapping(
         value = "/weather/list",
         method = RequestMethod.GET,
         produces = "application/json; charset=UTF-8"
     )
-    public List<WeatherDataDTO> weatherList(int device_id) {
+    public List<WeatherDataDTO> weatherList(int deviceId) {
 
-        log.info("@# /weather/list 호출 device_id => {}", device_id);
+        log.info("weatherList() deviceId => {}", deviceId);
 
-        return weatherDataService.getOrFetchWeatherList(device_id);
+        return weatherDataService.getOrFetchWeatherList(deviceId);
     }
 }

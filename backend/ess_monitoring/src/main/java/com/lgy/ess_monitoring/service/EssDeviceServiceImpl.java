@@ -5,87 +5,70 @@ import java.util.ArrayList;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.lgy.ess_monitoring.util.GridConverter;
 
 import com.lgy.ess_monitoring.dao.EssDeviceDAO;
 import com.lgy.ess_monitoring.dto.EssDeviceDTO;
+import com.lgy.ess_monitoring.util.GridConverter;
 
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 @Service
-public class EssDeviceServiceImpl implements EssDeviceService{
-	
-	@Autowired
-	private SqlSession sqlSession;
-	
+public class EssDeviceServiceImpl implements EssDeviceService {
 
-	@Override
-	public void inseretDevice(EssDeviceDTO deviceDTO) {
+    @Autowired
+    private SqlSession sqlSession;
 
-	    if (deviceDTO.getLatitude() != null && deviceDTO.getLongitude() != null) {
+    @Override
+    public void insertDevice(EssDeviceDTO deviceDto) {
+        if (deviceDto.getLatitude() != null && deviceDto.getLongitude() != null) {
+            double latitude = deviceDto.getLatitude().doubleValue();
+            double longitude = deviceDto.getLongitude().doubleValue();
 
-	        double lat = deviceDTO.getLatitude().doubleValue();
-	        double lon = deviceDTO.getLongitude().doubleValue();
+            int[] grid = GridConverter.convertToGrid(latitude, longitude);
 
-	        int[] grid = GridConverter.convertToGrid(lat, lon);
+            deviceDto.setNx(grid[0]);
+            deviceDto.setNy(grid[1]);
 
-	        deviceDTO.setNx(grid[0]);
-	        deviceDTO.setNy(grid[1]);
+            log.info("@# latitude => " + latitude);
+            log.info("@# longitude => " + longitude);
+            log.info("@# nx => " + grid[0]);
+            log.info("@# ny => " + grid[1]);
+        } else {
+            log.warn("@# 좌표 없음 → nx/ny 계산 안됨");
+        }
 
-	        log.info("@# latitude => " + lat);
-	        log.info("@# longitude => " + lon);
-	        log.info("@# nx => " + grid[0]);
-	        log.info("@# ny => " + grid[1]);
+        EssDeviceDAO deviceDao = sqlSession.getMapper(EssDeviceDAO.class);
+        deviceDao.insertDevice(deviceDto);
+    }
 
-	    } else {
-	        log.warn("@# 좌표 없음 → nx/ny 계산 안됨");
-	    }
+    @Override
+    public ArrayList<EssDeviceDTO> getDeviceList(int memberId) {
+        EssDeviceDAO deviceDao = sqlSession.getMapper(EssDeviceDAO.class);
+        return deviceDao.getDeviceList(memberId);
+    }
 
-	    EssDeviceDAO dao = sqlSession.getMapper(EssDeviceDAO.class);
-	    dao.insertDevice(deviceDTO);
-	}
+    @Override
+    public int getDeviceCount(int memberId) {
+        EssDeviceDAO deviceDao = sqlSession.getMapper(EssDeviceDAO.class);
+        return deviceDao.getDeviceCount(memberId);
+    }
 
-	@Override
-	public ArrayList<EssDeviceDTO> getDeviceList(int member_id) {
-		EssDeviceDAO dao = sqlSession.getMapper(EssDeviceDAO.class);
-		return dao.getDeviceList(member_id);
-	}
+    @Override
+    public int deleteDevice(int deviceId, int memberId) {
+        EssDeviceDAO deviceDao = sqlSession.getMapper(EssDeviceDAO.class);
+        return deviceDao.deleteDevice(deviceId, memberId);
+    }
 
-	@Override
-	public int getDeviceCount(int member_id) {
-		EssDeviceDAO dao = sqlSession.getMapper(EssDeviceDAO.class);
-		return dao.getDeviceCount(member_id);
-	}
+    @Override
+    public EssDeviceDTO deviceDetail(int deviceId) {
+        EssDeviceDAO deviceDao = sqlSession.getMapper(EssDeviceDAO.class);
+        return deviceDao.deviceDetail(deviceId);
+    }
 
-	@Override
-	public int deleteDevice(int device_id, int member_id) {
-		EssDeviceDAO dao = sqlSession.getMapper(EssDeviceDAO.class);
-		
-		int result = dao.deleteDevice(device_id, member_id);
-		
-		return result;
-	}
-
-	@Override
-	public EssDeviceDTO deviceDetail(int device_id) {
-		EssDeviceDAO dao = sqlSession.getMapper(EssDeviceDAO.class);
-		EssDeviceDTO dto = dao.deviceDetail(device_id);
-		
-		return dto;
-	}
-	
-	@Override
-	public ArrayList<EssDeviceDTO> getDashboardDeviceStatusList(int member_id) {
-		
-		EssDeviceDAO dao = sqlSession.getMapper(EssDeviceDAO.class);
-	    return dao.getDashboardDeviceStatusList(member_id);
-	}
-	
+    @Override
+    public ArrayList<EssDeviceDTO> getDashboardDeviceStatusList(int memberId) {
+        EssDeviceDAO deviceDao = sqlSession.getMapper(EssDeviceDAO.class);
+        return deviceDao.getDashboardDeviceStatusList(memberId);
+    }
 }
-
-
-
-
-
